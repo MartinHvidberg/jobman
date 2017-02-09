@@ -72,17 +72,16 @@ def start_new_process(set_p):
         except:
             print "... but I wan't fast enough."
             str_job = None # If unsuccessful the file may have been snatch by another worker, milli-seconds before us...
-            return (bol_more_left, set_p)
+            return bol_more_left, set_p
         # make and fill work-dir in work-dir
         str_work_dir = dic_config['myworkdir']
         str_workwork_dir = str_work_dir + delim_dir + str_job.split("." ,1)[0]
         os.makedirs(str_workwork_dir)
-        print "workwork", str_workwork_dir
         shutil.copyfile(str_dir_b + delim_dir + str_job, str_workwork_dir + delim_dir + str_job)
         # Run...
         if str_job:
             str_args = str_workwork_dir+delim_dir+str_job
-            set_p.add(subprocess.Popen(str_args, shell=True, cwd=str_work_dir))
+            set_p.add(subprocess.Popen(str_args, shell=True, cwd=str_workwork_dir))
     else:
         bol_more_left = False
     return (bol_more_left, set_p)
