@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8f2f259f-57a6-4e2c-9764-75149e3f72ae" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_31.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_40.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_80.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_92.bat" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/jobman.py" afterPath="$PROJECT_DIR$/src/jobman.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -300,7 +295,14 @@
       <option name="project" value="LOCAL" />
       <updated>1486669005869</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="fire well">
+      <created>1486670173731</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1486670173731</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView">
@@ -341,7 +343,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="putmore" />
     <MESSAGE value="putmore104" />
-    <option name="LAST_COMMIT_MESSAGE" value="putmore104" />
+    <MESSAGE value="fire well" />
+    <option name="LAST_COMMIT_MESSAGE" value="fire well" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
