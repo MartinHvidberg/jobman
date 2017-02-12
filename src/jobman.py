@@ -54,7 +54,13 @@ def clear_dir(dirpath):
     return
 
 def handle_completed_processes(set_p):
-    XXX.poll()
+    for proc in set_p:
+        poll_n = proc.poll()
+        if poll_n != None: # it's completed, i.e. stopped running
+            if poll_n == 0: # it has completed sucessfully
+                print "cm", proc.communicate()
+            else: # it has completed with error
+                pass
     return set_p
 
 def start_new_process(set_p):
@@ -84,7 +90,7 @@ def start_new_process(set_p):
             set_p.add(subprocess.Popen(str_args, shell=True, cwd=str_workwork_dir))
     else:
         bol_more_left = False
-    return (bol_more_left, set_p)
+    return bol_more_left, set_p
 
 if __name__ == "__main__":
 

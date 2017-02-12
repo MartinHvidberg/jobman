@@ -29,7 +29,7 @@ if __name__ == "__main__":
             sys.exit(999)
         fil_out = open('spndtime_{}.ecr'.format(str(m)),"w")
         print "Running spndtime for {}".format(str(m))
-        while m<100000:
+        while m<1000000:
             if is_prime(m):
                 fil_out.write(str(m)+"\n")
             m+=100
