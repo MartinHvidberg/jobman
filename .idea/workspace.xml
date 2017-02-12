@@ -2,28 +2,85 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8f2f259f-57a6-4e2c-9764-75149e3f72ae" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_25.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_27.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_29.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_30.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_39.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_45.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_5.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_54.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_56.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_63.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_69.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_70.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_71.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_78.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_82.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_84.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_85.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_89.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_94.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_96.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_0.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_1.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_10.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_11.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_12.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_13.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_14.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_15.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_16.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_17.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_18.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_19.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_2.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_20.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_21.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_22.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_23.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_24.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_26.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_28.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_3.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_32.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_33.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_34.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_35.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_36.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_37.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_38.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_4.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_41.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_42.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_43.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_44.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_46.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_47.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_48.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_49.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_50.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_51.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_52.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_53.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_55.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_57.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_58.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_59.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_6.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_60.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_61.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_62.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_64.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_65.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_66.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_67.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_68.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_7.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_72.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_73.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_74.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_75.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_76.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_77.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_79.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_8.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_81.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_83.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_86.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_87.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_88.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_9.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_90.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_91.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_93.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_95.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_97.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_98.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jobman_master/Available/spndtime_99.bat" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spndtime/spndtime.py" afterPath="$PROJECT_DIR$/spndtime/spndtime.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jobman_master/Executables/spndtime.py" afterPath="$PROJECT_DIR$/jobman_master/Executables/spndtime.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/jobman.config" afterPath="$PROJECT_DIR$/src/jobman.config" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/jobman.py" afterPath="$PROJECT_DIR$/src/jobman.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -42,24 +99,45 @@
       <file leaf-file-name="jobman.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/jobman.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="149" column="35" lean-forward="false" selection-start-line="149" selection-start-column="35" selection-end-line="149" selection-end-column="35" />
-              <folding />
+            <state relative-caret-position="331">
+              <caret line="76" column="44" lean-forward="false" selection-start-line="76" selection-start-column="44" selection-end-line="76" selection-end-column="44" />
+              <folding>
+                <element signature="e#32#41#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="spndtime.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spndtime/spndtime.py">
+      <file leaf-file-name="jobman.config" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jobman.config">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="31" column="20" lean-forward="false" selection-start-line="31" selection-start-column="20" selection-end-line="31" selection-end-column="20" />
+            <state relative-caret-position="219">
+              <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>dic_config</find>
+      <find>set_procs</find>
+      <find>set_p</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>dic_conf</replace>
+      <replace>dic_pro</replace>
+      <replace>dic_p</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -68,6 +146,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/spndtime/spndtime.py" />
+        <option value="$PROJECT_DIR$/src/fun_temp.py" />
+        <option value="$PROJECT_DIR$/src/jobman.config" />
         <option value="$PROJECT_DIR$/src/jobman.py" />
       </list>
     </option>
@@ -77,6 +157,25 @@
     <option name="y" value="-4" />
     <option name="width" value="1374" />
     <option name="height" value="776" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Python</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>General</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -156,6 +255,23 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="jobman" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/jobman.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="fun_temp" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="jobman" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/fun_temp.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -294,12 +410,14 @@
       <option name="USE_KEYWORD" value="false" />
       <method />
     </configuration>
-    <list size="1">
+    <list size="2">
       <item index="0" class="java.lang.String" itemvalue="Python.jobman" />
+      <item index="1" class="java.lang.String" itemvalue="Python.fun_temp" />
     </list>
     <recent_temporary>
-      <list size="1">
+      <list size="2">
         <item index="0" class="java.lang.String" itemvalue="Python.jobman" />
+        <item index="1" class="java.lang.String" itemvalue="Python.fun_temp" />
       </list>
     </recent_temporary>
   </component>
@@ -342,7 +460,14 @@
       <option name="project" value="LOCAL" />
       <updated>1486670211592</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="fire well 2">
+      <created>1486911401549</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1486911401549</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TodoView">
@@ -356,26 +481,45 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="-4" width="1374" height="776" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24981412" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24981412" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24981412" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
+    <layout-to-restore>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24981412" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296355" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -396,7 +540,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#32#41#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -412,7 +558,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#32#41#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -424,11 +572,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/fun_temp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="58" lean-forward="false" selection-start-line="3" selection-start-column="58" selection-end-line="3" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jobman.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/jobman.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="149" column="35" lean-forward="false" selection-start-line="149" selection-start-column="35" selection-end-line="149" selection-end-column="35" />
-          <folding />
+        <state relative-caret-position="331">
+          <caret line="76" column="44" lean-forward="false" selection-start-line="76" selection-start-column="44" selection-end-line="76" selection-end-column="44" />
+          <folding>
+            <element signature="e#32#41#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

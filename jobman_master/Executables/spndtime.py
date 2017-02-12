@@ -9,6 +9,7 @@ until reaching 10.000, and for each checking if that number is prime.
 Nothing more - quite pointless - but suited to test JobMan..."""
 
 import sys
+import time
 
 def usage():
     print "Usage:  spndtime.py n\n\twhere n is an integer [1..100]"
@@ -20,7 +21,7 @@ def is_prime(n):
     return True
 
 if __name__ == "__main__":
-    print "Begin..."
+    print " %%% Begin..."
     if len(sys.argv)>1:
         try:
             m = int(sys.argv[1])
@@ -28,7 +29,7 @@ if __name__ == "__main__":
             usage
             sys.exit(999)
         fil_out = open('spndtime_{}.ecr'.format(str(m)),"w")
-        print "Running spndtime for {}".format(str(m))
+        print " %%% Running spndtime for {}".format(str(m))
         while m<100000:
             if is_prime(m):
                 fil_out.write(str(m)+"\n")
@@ -36,4 +37,6 @@ if __name__ == "__main__":
         fil_out.close()
     else:
         usage
-    print "Done..."
+    print " %%% sleep"
+    time.sleep(10)
+    print " %%% Done..."
