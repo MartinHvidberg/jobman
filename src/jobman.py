@@ -11,18 +11,25 @@ import subprocess
 # import home grown...
 
 """ Job Man
-Read .config file
+Plan:
+    Read .config file
 
-Delete all local files, i.e empty local work-directory
-Look through /Available and pick a job
-Move that job file to /Busy
-Make a copy of it to local work-directory
-Execute the file locally
-If exist success.jobman in local dir, then
-    move job file from /Busy to /Completed, else
-    move job tile from /Busy to /Discarded
-Delete all local files, i.e empty local work-directory"""
+    Delete all local files, i.e empty local work-directory
+    Look through /Available and pick a job
+    Move that job file to /Busy
+    Make a copy of it to local work-directory
+    Execute the file locally
+    If exist success.jobman in local dir, then
+        move job file from /Busy to /Completed, else
+        move job tile from /Busy to /Discarded
+    Delete all local files, i.e empty local work-directory
 
+ToDo
+    When job pool is empty, wait for busy jobs to complete
+    Send .jmlog to L rather than t C/D
+"""
+
+__version__ = "1.0.0"
 
 def read_config_file(str_fn):
     dic_conf = dict()
@@ -66,12 +73,35 @@ def handle_completed_processes(dic_p):
         proc = dic_proc_i['subpro']
         poll_n = proc.poll()
         if poll_n is not None:  # it's completed, i.e. stopped running
-            if poll_n == 0:  # it has completed sucessfully
+            # stop the timer
+            dic_proc_i['tim_stop'] = datetime.datetime.now()
+            dic_proc_i['tim_dura'] = str(dic_proc_i['tim_stop']-dic_proc_i['tim_start'])
+            # write a log file
+            fil_jmlog = open(dic_proc_i['workdir']+delim_dir+dic_proc_i['name']+".jmlog","w")
+            for itms in sorted(dic_proc_i.keys()):
+                str_logline = "   $ {} : {}".format(itms, dic_proc_i[itms])
+                fil_jmlog.write(str_logline+"\n")
+                print str_logline
+            fil_jmlog.close()
+            # check for success
+            if poll_n == 0:  # it has completed successfully
                 print "Proc comp. succ. {}".format(dic_proc_i['name'])
-                # XXX Handle the results of the calculations...
+                str_dest_dir = str_dir_c
             else:  # it has completed with error
                 print "Proc comp. FAIL. {}".format(dic_proc_i['name'])
-                # XXX Handle the results of the calculations...
+                str_dest_dir = str_dir_d
+            # return all the files to /Master and clean up
+            try:
+                shutil.move(dic_proc_i['workdir'],str_dest_dir)
+            except:
+                print "Error - Can't move workdir back to master"
+                sys.exit(994)
+            # Remove the job from /Busy
+            try:
+                shutil.move(str_dir_b+delim_dir+dic_proc_i['name']+".bat",str_dest_dir)
+            except:
+                print "Error - Can't move workdir back to master: {} >> {}".format(str_dir_b+delim_dir+dic_proc_i['name'],str_dest_dir)
+                sys.exit(993)
             # Mark process to be removed
             lst_completed_processes.append(proc_key_i)
     for compproc in lst_completed_processes:
@@ -109,7 +139,7 @@ def start_new_process(dic_p):
             str_job = None  # If unsuccessful the file may have been snatch by another worker, milli-seconds before us.
             return bol_more_left, dic_p
         # make and fill work-dir in work-dir
-        str_shortname = str_job.split(".", 1)[0] # i.e. loose the file extension
+        str_shortname = str_job.split(".", 1)[0]  # i.e. loose the file extension
         str_work_dir = dic_conf['myworkdir']
         str_workwork_dir = str_work_dir + delim_dir + str_shortname
         os.makedirs(str_workwork_dir)
@@ -130,7 +160,9 @@ def start_new_process(dic_p):
                 dic_job['subpro'] = safe_proc
                 dic_job['workdir'] = str_workwork_dir
                 dic_job['tim_start'] = tim_start
-                dic_p[str_shortname] = dic_job # add the new job to the pool
+                dic_job['worker_name'] = str_worker_name
+                dic_job['worker_comp'] = str_worker_comp
+                dic_p[str_shortname] = dic_job  # add the new job to the pool
     else:
         bol_more_left = False
     return bol_more_left, dic_p
@@ -143,6 +175,18 @@ if __name__ == "__main__":
 
     # Read the .config file
     dic_conf = read_config_file("jobman.config")
+
+    # Note workers name and computer
+    if 'name' in dic_conf.keys():
+        str_worker_name = dic_conf['name']
+    else:
+        print "Error - .config file don't specify a name"
+        sys.exit(996)
+    if 'computer' in dic_conf.keys():
+        str_worker_comp = dic_conf['computer']
+    else:
+        print "Error - .config file don't specify a computer"
+        sys.exit(995)
 
     # Check, and clear, the 'myworkdir'
     if 'myworkdir' in dic_conf.keys():
@@ -194,22 +238,27 @@ if __name__ == "__main__":
             print "Warning - .config file holds non integer value for 'hammertime'"
             # fall back on default value above...
 
-
     # All is Green - We are Good-to-go...
     print "All is Green - We are Good-to-go..."
 
     # Start running processes
     bol_more_left = True  # Just assume that /Available is non-empty, we will check later.
+    bol_more_busy = False  # No jobs busy, yet, as we havent started any, yet.
     dic_pro = dict()  # Dictionary holding the process-objects
-    while bol_more_left:
-        while len(dic_pro) >= num_max_pr:
-            print "dic too long: {} >= {} :: {}".format(len(dic_pro),num_max_pr,dic_pro)
+    while bol_more_left or bol_more_busy:
+        bol_more_busy = len(dic_pro)>0
+        # Check on running jobs
+        while len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
+            print "dic too long: {} >= {} ".format(len(dic_pro), num_max_pr)
             time.sleep(num_htime)  # in seconds...
-            print "T",
-            # replace 'T' with look for keypressed, and write status, and maybe handle different keypress?
+            print "K",  # replace 'K' with look for keypressed, and write status, and maybe handle different keypress?
             dic_pro = handle_completed_processes(dic_pro)
-        # Start a new thread.
-        print "dic too short: {} < {} :: {}".format(len(dic_pro),num_max_pr,dic_pro)
-        bol_more_left, dic_pro = start_new_process(dic_pro)
+        # Start up new jobs
+        if bol_more_left:
+            # Start a new thread.
+            print "dic too short: {} < {}".format(len(dic_pro), num_max_pr)
+            bol_more_left, dic_pro = start_new_process(dic_pro)
+        if bol_more_busy:
+            dic_pro = handle_completed_processes(dic_pro)  # Nessisary to process last jobs, after pool is empty
 
     print "JobMan complete..."
