@@ -1,7 +1,8 @@
 
-# import from Standard Library
+# import from The Python Standard Library
 import os
 import sys
+import logging
 import shutil
 import random
 import datetime
@@ -29,7 +30,20 @@ ToDo
     Send .jmlog to L rather than t C/D
 """
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
+__build__ = "2017-05-06 20.00"
+
+def print_and_log(str_message, level='Info'):
+    print str_message
+    if level.lower() == 'info':
+        logging.info(str_message)
+    elif level.lower() == 'warning':
+        logging.warning(str_message)
+    elif level.lower() == 'debug':
+        logging.debug(str_message)
+    else:
+        print "Error - print_and_log() encountered unknown error level: {}".format(level)
+
 
 def read_config_file(str_fn):
     dic_conf = dict()
@@ -45,9 +59,9 @@ def read_config_file(str_fn):
 def check_write_access(str_dir):
     str_test_dir_name = "delete_this_test_dir_if_it_exist_for_more_than_a_few_seconds"
     try:
-        os.makedirs(str_dir + delim_dir + str_test_dir_name)
-        if os.path.exists(str_dir + delim_dir + str_test_dir_name):
-            shutil.rmtree(str_dir + delim_dir + str_test_dir_name)
+        os.makedirs(str_dir + str_osep + str_test_dir_name)
+        if os.path.exists(str_dir + str_osep + str_test_dir_name):
+            shutil.rmtree(str_dir + str_osep + str_test_dir_name)
             return True
     except:
         return False
@@ -63,7 +77,6 @@ def clear_dir(dirpath):
                 os.remove(filepath)
     else:
         os.makedirs(dirpath)
-    return
 
 
 def handle_completed_processes(dic_p):
@@ -77,7 +90,7 @@ def handle_completed_processes(dic_p):
             dic_proc_i['tim_stop'] = datetime.datetime.now()
             dic_proc_i['tim_dura'] = str(dic_proc_i['tim_stop']-dic_proc_i['tim_start'])
             # write a log file
-            fil_jmlog = open(dic_proc_i['workdir']+delim_dir+dic_proc_i['name']+".jmlog","w")
+            fil_jmlog = open(dic_proc_i['workdir']+str_osep+dic_proc_i['name']+".jmlog","w")
             for itms in sorted(dic_proc_i.keys()):
                 str_logline = "   $ {} : {}".format(itms, dic_proc_i[itms])
                 fil_jmlog.write(str_logline+"\n")
@@ -98,9 +111,9 @@ def handle_completed_processes(dic_p):
                 sys.exit(994)
             # Remove the job from /Busy
             try:
-                shutil.move(str_dir_b+delim_dir+dic_proc_i['name']+".bat",str_dest_dir)
+                shutil.move(str_dir_b+str_osep+dic_proc_i['name']+".bat",str_dest_dir)
             except:
-                print "Error - Can't move workdir back to master: {} >> {}".format(str_dir_b+delim_dir+dic_proc_i['name'],str_dest_dir)
+                print "Error - Can't move workdir back to master: {} >> {}".format(str_dir_b+str_osep+dic_proc_i['name'],str_dest_dir)
                 sys.exit(993)
             # Mark process to be removed
             lst_completed_processes.append(proc_key_i)
@@ -133,7 +146,7 @@ def start_new_process(dic_p):
         print "I picked job: {}".format(str_job)
         # Secure the file, so nobody else grabs it
         try:
-            shutil.move(str_dir_a + delim_dir + str_job, str_dir_b + delim_dir + str_job)
+            shutil.move(str_dir_a + str_osep + str_job, str_dir_b + str_osep + str_job)
         except:
             print "... but I wasn't fast enough."
             str_job = None  # If unsuccessful the file may have been snatch by another worker, milli-seconds before us.
@@ -141,16 +154,16 @@ def start_new_process(dic_p):
         # make and fill work-dir in work-dir
         str_shortname = str_job.split(".", 1)[0]  # i.e. loose the file extension
         str_work_dir = dic_conf['myworkdir']
-        str_workwork_dir = str_work_dir + delim_dir + str_shortname
+        str_workwork_dir = str_work_dir + str_osep + str_shortname
         os.makedirs(str_workwork_dir)
         try:
-            shutil.copyfile(str_dir_b + delim_dir + str_job, str_workwork_dir + delim_dir + str_job)
+            shutil.copyfile(str_dir_b + str_osep + str_job, str_workwork_dir + str_osep + str_job)
         except:
             print "Error - Can't copy job file: {} Busy: {} Workdir: {}".format(str_job, str_dir_d, str_workwork_dir)
             sys.exit(996)
         # Run...
         if str_job:
-            str_args = str_workwork_dir + delim_dir + str_job
+            str_args = str_workwork_dir + str_osep + str_job
             safe_proc = saferun_subprocess(str_args, str_workwork_dir)
             if safe_proc:
                 tim_start = datetime.datetime.now()
@@ -170,11 +183,28 @@ def start_new_process(dic_p):
 
 if __name__ == "__main__":
 
-    # Assume we are on windows
-    delim_dir = "\\"
+    # Open a session log file
+    logging.basicConfig(filename='jobman.sessionlog', level=logging.DEBUG)
+    print_and_log("JobMan ver.{} - starting logfile...\n".format(__version__), "info")
+
+    # Check if we are on windows or Linux
+    if os.name.lower() in ('unix', 'posix'):
+        str_osep = "/"
+        #str_pyth = "python"
+        #str_oext = ".sh"
+    elif os.name.lower() in ('win'):
+        str_osep = "\\"
+        #str_pyth = "C:\Python27\python.exe"
+        #str_oext = ".bat"
+    else:
+        print "Can't understand OS named: {}".format(os.name)
+        exit(993)
+    print " + OS identified..."
 
     # Read the .config file
-    dic_conf = read_config_file("jobman.config")
+    str_config_fn = "jobman.config"
+    dic_conf = read_config_file(str_config_fn)
+    print " + Read config file: {}".format(str_config_fn)
 
     # Note workers name and computer
     if 'name' in dic_conf.keys():
@@ -182,20 +212,31 @@ if __name__ == "__main__":
     else:
         print "Error - .config file don't specify a name"
         sys.exit(996)
+    print " + Name of user: {}".format(str_worker_name)
+
     if 'computer' in dic_conf.keys():
         str_worker_comp = dic_conf['computer']
+        if str_worker_comp == 'GE400':
+            print "Sorry - I can't do that...I'm not a General Electric 400-series computer."
+            print "Please check if you have edited your local copy of jobman.config to reflect your actual computer."
+            sys.exit(994)
     else:
         print "Error - .config file don't specify a computer"
         sys.exit(995)
+    print " + Name of computer: {}".format(str_worker_comp)
 
-    # Check, and clear, the 'myworkdir'
+    # Check, and clear, the local workdir
     if 'myworkdir' in dic_conf.keys():
-        workdir = dic_conf['myworkdir']
-        if check_write_access(workdir):
-            clear_dir(workdir)
+        str_workdir = dic_conf['myworkdir']
+        if check_write_access(str_workdir):
+            clear_dir(str_workdir)
+        else:
+            print "Error - I can't write files to the specified work directory: {}".format(str_workdir)
+            sys.exit(992)
     else:
         print "Error - The .config file contains no valid 'myworkdir'..."
         sys.exit(999)
+    print " + Work dir cleared: {}".format(str_workdir)
 
     # Master work directory
     if 'jmjqmdir' in dic_conf.keys():
@@ -203,22 +244,22 @@ if __name__ == "__main__":
     else:
         print "Error - .config file don't specify a jmjqmdir"
         sys.exit(997)
-
-    # Check directories A, B, C, D, E and L
-    str_dir_a = str_master_dir + delim_dir + "Available"
-    str_dir_b = str_master_dir + delim_dir + "Busy"
-    str_dir_c = str_master_dir + delim_dir + "Completed"
-    str_dir_d = str_master_dir + delim_dir + "Discarded"
-    str_dir_e = str_master_dir + delim_dir + "Executables"
-    str_dir_l = str_master_dir + delim_dir + "Logging"
+    # Check that Master directory contains directories A, B, C, D, E and L
+    str_dir_a = str_master_dir + str_osep + "Available"
+    str_dir_b = str_master_dir + str_osep + "Busy"
+    str_dir_c = str_master_dir + str_osep + "Completed"
+    str_dir_d = str_master_dir + str_osep + "Discarded"
+    str_dir_e = str_master_dir + str_osep + "Executables"
+    str_dir_l = str_master_dir + str_osep + "Logging"
     if not all([os.path.exists(str_dir_a),
                 os.path.exists(str_dir_b),
                 os.path.exists(str_dir_c),
                 os.path.exists(str_dir_d),
                 os.path.exists(str_dir_e),
                 os.path.exists(str_dir_l)]):
-        print "Error - One or more of the expected directories A, B, C, D, E, and L are missing..."
+        print "Error - One or more of the expected directories A, B, C, D, E, and L are missing from {}".format(str_master_dir)
         sys.exit(999)
+    print " + Master dir found: {}".format(str_master_dir)
 
     # Assume one process at the time, if not set otherwise in .config file
     if 'max_threads' in dic_conf.keys():
@@ -228,15 +269,20 @@ if __name__ == "__main__":
             num_max_pr = 1
     else:
         num_max_pr = 1
+    print " + Prepared max threads: {}".format(num_max_pr)
 
     # Minimum time to wait between checking for a vacant process slot
-    num_htime = 10
+    num_htime = 10 # Default 'hammer-time' to 10 sec.
     if 'hammertime' in dic_conf.keys():
         try:
             num_htime = int(dic_conf['hammertime'])
         except ValueError:
             print "Warning - .config file holds non integer value for 'hammertime'"
             # fall back on default value above...
+    else:
+        print "Error - .config file don't specify a hammertime"
+        sys.exit(992)
+    print " + Hammer time set to: {} seconds".format(num_htime)
 
     # All is Green - We are Good-to-go...
     print "All is Green - We are Good-to-go..."
