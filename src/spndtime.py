@@ -8,6 +8,10 @@ between 1-100. It will then walk through all numbers n, n+100, n+200
 until reaching 10.000, and for each checking if that number is prime.
 Nothing more - quite pointless - but suited to test JobMan..."""
 
+
+    This should not be used, look in ../spendtime/spendtime.py instead.
+
+
 import sys
 
 def usage():
