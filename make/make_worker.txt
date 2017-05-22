@@ -1,0 +1,31 @@
+
+Expect to make a seperate workdir for each seperate production, e.g. "Slope a million tiles"
+There should alway be a workdir per masterdir. (as of JobMan ver.1.x)
+
+In the following 'the worker' is the user that will later be running JobMan from this dir
+
+Establish a workdir on a local drive, where 'the worker' can be granted Read access
+workdir = /
+
+put in this dir
+/jobman.config
+/jobman.py
+
+Establish a workers_dir, where 'the worker' can be granted Read and Write access 
+and that 'the worker' my empty at will (you don'r keep stuff there...)
+workers_dir = /workers
+
+copy /masterdir/Executables to /workdir/Executables
+
+Adjust .config to reflect the dirs, hardware, etc. on your local computer...
+
+Your workdir structure will now look like this, 
+where somefile.x is an executable, copied from /masterdir that 'the worker' can run
+where R, W and X indicat the Read, Write and eXecute privilidges of 'the worker'.
+
+/
+|   jobman.config	R
+|   jobman.py		R
++---Executables		R
+|       somefile.x	RX
++---workers		RW

@@ -192,7 +192,7 @@ if __name__ == "__main__":
         str_osep = "/"
         #str_pyth = "python"
         #str_oext = ".sh"
-    elif os.name.lower() in ('win'):
+    elif os.name.lower() in ('win','nt'):
         str_osep = "\\"
         #str_pyth = "C:\Python27\python.exe"
         #str_oext = ".bat"

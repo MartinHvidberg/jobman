@@ -1,0 +1,15 @@
+
+Expect to make a seperate masterdir for each seperate production, e.g. "Slope a million tiles"
+
+Establish a masterdir on a shared drive, where all workers can be granted Read and Write access
+
+masterdir = /
+
+Create the following directories
+/Available
+/Busy
+/Completed
+/Discarded
+/Executables
+/Logging
+
