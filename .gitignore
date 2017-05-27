@@ -3,3 +3,5 @@
 .project
 .pyc
 /jobman_ill_1.odp
+.sh
+.bat

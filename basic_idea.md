@@ -1,4 +1,4 @@
-## Basic idea in jobman 
+# Basic idea in jobman 
 
 Jobman enables a computer to ask for a package of work, execute it, and return the result...
 
@@ -6,7 +6,20 @@ The overall idea is to utilise some of the idle time on our office computers, in
 
 The concept is based on the idea of a pool of small(er) work packages. I'll get back to details on the packages in a moment. 
 
-# Pool
+## Implimentation via shared disk/directory
+
+This is the working mode of ver. 1.x. 
+
+### The shared pool of work
+
+
+### The local 'worker' computer 
+
+## Implimetation via Message Que
+
+This is the working mode of a feature implimentation, lakely ver. 2.0, or something like that...
+
+### Pool
 
 The pool is, in the present implementation a Message Queue server (specifically a RabbitMQ server) with a public hiring queue where 'employers' can announce that they have work to offer. They do not queue the actual work packages on this public queue, just a message that they need workers. This message is persistent and can be read from the queue many times, by many workers. It should be removed, by it's original poster, when all the work is completed.
 
@@ -14,7 +27,7 @@ The worker can read from the public hiring queue to find employment. The worker 
 
 The further exchange of work and replies, is send via private queues (one in each direction) between the worker and the employer.
 
-# Step-by-step
+### Step-by-step
 
 Please refer to illustration: jobman_ill_1 for the following, more stepwise, explanation.
 
@@ -40,5 +53,5 @@ If 'E' finds the result to be satisfying, then 5,6,7,8 can repeat, for as long a
 
 
 
-The Packages
+###The Packages
 
