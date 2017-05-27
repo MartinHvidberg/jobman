@@ -9,9 +9,12 @@ The concept is based on the idea of a pool of small(er) work packages. I'll get 
 ## Implimentation via shared disk/directory
 
 This is the working mode of ver. 1.x. 
+This approach implies (requiers) that 'a job' can be represented as an executable file (e.g. .bat, .sh, .exe, .py). It's okay to have the .bat call a python or .exe file, as long as they are all provided for the 'worker' computer.
 
 ### The shared pool of work
 
+The shared pool of work is a directory that can be seen by all the 'worker' computers. This directory have fixed structure of subdirectories.
+It is intented for one pool to server only one overall job, e.g. you have a job of interpreting 100.000 images, and another job of estimating trends in 100.000 shares on the stock-marked, that would be two different tasks and call for two independent pools.
 
 ### The local 'worker' computer 
 
