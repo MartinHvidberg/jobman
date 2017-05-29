@@ -10,20 +10,20 @@ import subprocess
 """
 OVERALL IDEA
  
- loop over 10km griddet
-   start en overprocess som omfatter 1 10km celle, lad den arbejde i 1 /sub_dir/ 
-     Del data op i 100 delarealer ag 1km gridcelle stoerrelse
-       For hver 1km celle
-         Tilrettelaeg: udgangsopjekt.shp, DSM og gerne kyst linje
-         Skriv en .bat fil
-         Fyr den af!
-       sikre (arkiver) in- og output data til en opsamlende folder (anden stoerre disk?)
-         
-Dogmer:
-- Hver 1km process er selfcontained og fuldt afsluttet i en koersel. Som forhaabentligt er hurtig (max nogle timer)
-- Hver 10km koerer filmaesigt isoleret i et dir (0..F).
-- 16 CPU'er arbejde paa 16 samtidige 10km overprocesser
-- Naar en 10km overprocess er slut gives besked i .log saa data kan manuelt kvalitetssikres, efterhaanden som de bliver faerdige
+From a list of ID's of all relevant 1km cell names...
+    identify NSEW
+    do not execute, but make a .bat file that will execute
+        extract 1km2 of UdgangsObj for Udsigt to .shp file
+        extract 1km2 + 2km buffer of DTM to .tiff
+        extract 1km2 + 2km buffer of Coast line to .shp file
+        extract 1km2 + 2km buffer of Lake shore to .shp file
+        extract 1km2 + 2km buffer of Internal walls to .shp file
+        run a septi_view on general view to output a
+        run a septi_view on sea view to output b
+        run a septi_view on lake view to output c
+        delete the input .shp and .tiff files
+        move 3x output + 3x septi_view.log to a safe place
+        complete a jobman_cell_xxx.log 
 """
 
 
@@ -133,42 +133,21 @@ def build_all_overjobs(lst_all_over_cells, str_main_workdir):
 
 if __name__=="__main__":
     
-    bol_uo_is_pregenerated = True # False # Normally False, but can be True during debugging...
+    bol_uo_is_pregenerated = False # False # Normally False, but can be True during debugging...
     bol_cosat_is_pregenerated = False # True # Normally False, but can be True during debugging...
     num_shot_length = 2000 # SeptiView shoots 2km
-    
-    ### Note! the +2m was added while creating temp.pgv_dar_x_bbr_h_ltd...
-    #create table temp.pgv_dar_x_bbr_h_ltd as
-    #  select geom, dar_id, dar_1km_grid, dar_hoejde+2
-    #    from kilde.pgv_dar_x_bbr_h;
-    
-    # ** Check requirements
-    
-    # Check udsigt points exist
-    
-    # Check DEM exist
-    
-    # Check coastline exist
-    
-    # Check Main Workdir exist
-    str_main_workdir = "Q:\\udsigt_parallel\\"
-    print "MW", str_main_workdir
-    
-    # Check Main archive exist
-    str_main_archive = "Q:\\udsigt_parallel\\udsigt_archive\\"
-    
-    # Check lst_all_over_cells
-    str_filename_list_10km_grid = r"//C1503681/pgv2_Q/udsigt_parallel/list_10km_celler_DKnord_fra621op.txt"
-    lst_all_over_cells = list()
+    str_fn_cell_list_1km = "cell_list_1km.txt"
+    str_main_workdir = "."  # Where the job-files go
+
     try:
-        with open(str_filename_list_10km_grid) as f:
-            lst_file_content = f.readlines()
+        with open(str_fn_cell_list_1km) as f:
+            lst_all_cells = [x.strip() for x in f.readlines()]
     except:
-        log("ERROR - Can't open: List of over-cells: "+str(str_filename_list_10km_grid), 50)
-        sys.exit()
-    lst_all_over_cells = [varx.strip().strip('"') for varx in lst_file_content]
+        log("ERROR - Can't open: List of cells: "+str(str_fn_cell_list_1km), 50)
+        sys.exit(999)
     
     # ** Begin build
     log("All good to go...",20)
-    build_all_overjobs(lst_all_over_cells, str_main_workdir)
-    
+    #build_all_jobs(lst_all_cells, str_main_workdir)
+
+    log("Python script {} completed sucessfuly...".format(sys.argv[0]), 20)
