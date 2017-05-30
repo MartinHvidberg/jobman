@@ -21,14 +21,20 @@ ogr2ogr -overwrite -f "ESRI Shapefile" -spat 689000 6170000 694000 6175000 1km_6
 :: extract 1km2 + 2km buffer of Internal walls to .shp file
 
 :: run a septi_view on general view to output a
-rem septima_view.exe general --idatt dar_id --z pgv_uo_z 1km_6172_691_dhmdsm.tif Q:\udsigt_parallel\10km_604_68\uo_1km_6040_680.shp Q:\udsigt_parallel\10km_604_68\gen_1km_6040_680.csv
+rem septima_view.exe general --idatt dar_id --z z 1km_6172_691_dhmdsm.tif 1km_6172_691_udgobj.shp 1km_6172_691_gen.csv
 
 :: run a septi_view on sea view to output b
-rem septima_view.exe sea --idatt dar_id --z pgv_uo_z 1km_6172_691_dhmdsm.tif Q:\udsigt_parallel\10km_604_68\uo_1km_6040_680.shp Q:\udsigt_parallel\10km_604_68\cl_1km_6040_680.shp Q:\udsigt_parallel\10km_604_68\sea_1km_6040_680.csv
+rem septima_view.exe sea --idatt dar_id --z z 1km_6172_691_dhmdsm.tif 1km_6172_691_udgobj.shp Q:\udsigt_parallel\10km_604_68\cl_1km_6040_680.shp Q:\udsigt_parallel\10km_604_68\sea_1km_6040_680.csv
 
 :: run a septi_view on lake view to output c
 
-:: delete the input .shp and .tiff files
+:: delete the temp .shp and .tiff files
+if not "%jobman_keep_temp_files%"=="true" (
+  del 1km_6172_691_udgobj.* /q /u
+  del 1km_6172_691_dhmdsm.* /q /u
+  del 1km_6172_691_coastl.* /q /u
+)
+
 :: move 3x output + 3x septi_view.log to a safe place
 :: complete a jobman_cell_xxx.log 
 
