@@ -65,8 +65,8 @@ def XXXlist_1km_in_10km_cell(str_10km_cell_name):
 
 def build_all_jobs(lst_all_cells, str_main_workdir):
     
-    def build_all_subjobs(lst_sub_cells, str_over_dir, str_dem_file):
-        for sub_cell in lst_sub_cells:
+    ##def build_all_subjobs(lst_sub_cells, str_over_dir, str_dem_file):
+    ##    for sub_cell in lst_sub_cells:
 
     for cell in lst_all_cells:
         log("Running cell: {}".format(cell), 20)
@@ -79,8 +79,8 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
 
             # Open and clear relevant sub-dir
             str_cell_work_dir = "workdir_"+cell
-            fil_batch.write("REMDIR {}".format(str_cell_work_dir))
-            fil_batch.write("MAKEDIR {}".format(str_cell_work_dir))
+            fil_batch.write("REMDIR {}\n".format(str_cell_work_dir))
+            fil_batch.write("MAKEDIR {}\n".format(str_cell_work_dir))
 
             # Establish connection to DEM
             #str_dem_file = r"//C1503681/pgv2_Q/DSM160/DSM160.vrt"
@@ -88,7 +88,10 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
 
             # Create copy of relevant udsigts points
             str_cmd_call = 'ogr2ogr -overwrite -f "ESRI Shapefile" {0}uo_{1}.shp PG:"host=c1400067 user=brian dbname=pgv password=igenigen" "temp.pgv_udg_obj" -where dar_1km_grid=\'{1}\''.format(str_over_dir, sub_cell)
-            fil_batch.write("{}".format(str_cmd_call))
+            fil_batch.write("{}\n".format(str_cmd_call))
+
+            fil_batch.flush()
+            sys.exit(1)
 
             # Create copy of relevant coast line
             noget = tilename_to_extent(sub_cell, num_shot_length)
