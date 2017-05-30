@@ -1,9 +1,9 @@
 
-### Environmental parameters used to control JobMan
+# Environmental parameters used to control JobMan
 
 ## Controling JobMan.py
 
-# %dont_start_new_jobs%
+### %dont_start_new_jobs%
 
 True | False (anything != 'True' is considered false)
 
@@ -14,7 +14,7 @@ Turn this on, and wait for presently running jobs to complete.
 ## Controling the executing jobs (not garatied to always work)
 
 
-# %jobman_keep_temp_files%
+### %jobman_keep_temp_files%
 
 True | False (anything != 'True' is considered false)
 
