@@ -64,46 +64,94 @@ def XXXlist_1km_in_10km_cell(str_10km_cell_name):
         return 999
 
 def build_all_jobs(lst_all_cells, str_main_workdir):
-    
-    ##def build_all_subjobs(lst_sub_cells, str_over_dir, str_dem_file):
-    ##    for sub_cell in lst_sub_cells:
 
-    for cell in lst_all_cells:
-        log("Running cell: {}".format(cell), 20)
+    for str_cell_name in lst_all_cells:
+        log("Running cell: {}".format(str_cell_name), 20)
         
         # Open new .bat file
-        str_batch_fn = str_main_workdir+"\\udsigt_run_"+cell+".bat"
+        str_batch_fn = str_main_workdir+"\\udsigt_run_"+str_cell_name+".bat"
         with open(str_batch_fn, "w") as fil_batch:
-            
+
+            # create work dir
+            str_injob_work_dir = "workdir_"+str_cell_name
+            fil_batch.write("\n:: create work dir\n")
+            fil_batch.write("IF EXIST {} (\n".format(str_injob_work_dir))
+            fil_batch.write("DEL /F /S /  {}\n".format(str_injob_work_dir))
+            fil_batch.write("RMDIR /S /Q {} )\n".format(str_injob_work_dir))
+            fil_batch.write("MKDIR{}\n".format(str_injob_work_dir))
+            fil_batch.write("CD {}\n".format(str_injob_work_dir))
+
+            # start log file
+            str_injob_logfile_name = str_cell_name+"_cell.log"
+            fil_batch.write("\n:: start log file\n")
+            fil_batch.write("echo log file for {} > {}\n".format(str_cell_name,str_injob_logfile_name))
+            fil_batch.write("date / t >> {}\n".format(str_injob_logfile_name))
+            fil_batch.write("time / t >> {}\n".format(str_injob_logfile_name))
+            fil_batch.write("echo Start >> {}\n".format(str_injob_logfile_name))
+
+            # set GDAL parameters
+            fil_batch.write("\n:: set GDAL parameters\n")
             fil_batch.write("SET GDAL_CACHEMAX=1600\n")
+            fil_batch.write("rem GDAL_SWATH_SIZE=?\n")
 
-            # Open and clear relevant sub-dir
-            str_cell_work_dir = "workdir_"+cell
-            fil_batch.write("REMDIR {}\n".format(str_cell_work_dir))
-            fil_batch.write("MAKEDIR {}\n".format(str_cell_work_dir))
+            # calc cell extent coordinates, with and without buffer
+            #lst_cell_ext_only = tilename_to_extent(str_cell_name, 0) # not used as udsigts points are selected by attribute (faster)
+            lst_cell_ext_buff = tilename_to_extent(str_cell_name, num_shot_length)
 
-            # Establish connection to DEM
-            #str_dem_file = r"//C1503681/pgv2_Q/DSM160/DSM160.vrt"
-            str_dem_file = r"F:\GDB\DHM\AnvendelseGIS\DSM_20160318.vrt"
+            # extract 1km2 of UdgangsObj for Udsigt to .shp file
+            fil_batch.write("\n:: extract 1km2 of UdgangsObj for Udsigt to .shp file\n")
+            str_intro = "ogr2ogr -overwrite "
+            str_targt = "-f \"ESRI Shapefile\" {}_udgobj.shp ".format(str_cell_name)
+            str_sourc = "PG:\"host=c1503681 port=5433 user=reader dbname=pgv_2017 password=hejskat\" "
+            str_where = "-sql \"SELECT dar_id, z, geom FROM k.pgv_udsigtudg_parcel WHERE dar_ddkn_km1 = '{}'\"".format(str_cell_name)
+            fil_batch.write(str_intro + str_targt + str_sourc + str_where+"\n")
+            del str_intro, str_targt, str_sourc, str_where
 
-            # Create copy of relevant udsigts points
-            str_cmd_call = 'ogr2ogr -overwrite -f "ESRI Shapefile" {0}uo_{1}.shp PG:"host=c1400067 user=brian dbname=pgv password=igenigen" "temp.pgv_udg_obj" -where dar_1km_grid=\'{1}\''.format(str_over_dir, sub_cell)
-            fil_batch.write("{}\n".format(str_cmd_call))
+            # extract 1km2 + 2km buffer of DTM to .tiff
+            fil_batch.write("\n:: extract 1km2 + 2km buffer of DTM to .tiff\n")
+            str_intro = "gdalwarp -overwrite "
+            str_extnt = "-te {} {} {} {} ".format(lst_cell_ext_buff[0], lst_cell_ext_buff[1], lst_cell_ext_buff[2], lst_cell_ext_buff[3])
+            str_targt = r"\\C1503681\pgv2_E\DSM40\DSM_40_18052017.vrt "
+            str_sourc = "{}_dhmdsm.tif".format(str_cell_name)
+            fil_batch.write(str_intro + str_extnt + str_targt + str_sourc+"\n")
+            del str_intro, str_extnt, str_targt, str_sourc
+
+            # extract 1km2 + 2km buffer of Coast line to .shp file
+            fil_batch.write("\n:: extract 1km2 + 2km buffer of Coast line to .shp file\n")
+            str_intro = "ogr2ogr -overwrite "
+            str_targt = "-f \"ESRI Shapefile\" {}_coastl.shp ".format(str_cell_name)
+            str_extnt = "-spat {} {} {} {} ".format(lst_cell_ext_buff[0], lst_cell_ext_buff[1], lst_cell_ext_buff[2], lst_cell_ext_buff[3])
+            str_sourc = "PG:\"host=c1503681 port=5433 user=reader dbname=pgv_2017 password=hejskat\" "
+            str_where = "-sql \"SELECT kystlinje_id as id, geom FROM k.kystlinje\""
+            fil_batch.write(str_intro + str_targt + str_extnt + str_sourc + str_where+"\n")
+            del str_intro, str_targt, str_extnt, str_sourc, str_where
+
+            # extract 1km2 + 2km buffer of Lake shore to .shp file
+            fil_batch.write("\n:: extract 1km2 + 2km buffer of Lake shore to .shp file\n")
+            str_intro = "ogr2ogr -overwrite "
+            str_targt = "-f \"ESRI Shapefile\" {}_lakesh.shp ".format(str_cell_name)
+            str_extnt = "-spat {} {} {} {} ".format(lst_cell_ext_buff[0], lst_cell_ext_buff[1], lst_cell_ext_buff[2], lst_cell_ext_buff[3])
+            str_sourc = "PG:\"host=c1503681 port=5433 user=reader dbname=pgv_2017 password=hejskat\" "
+            str_where = "-sql \"SELECT soe_id as id, geom FROM k.soeudsigt\""
+            fil_batch.write(str_intro + str_targt + str_extnt + str_sourc + str_where+"\n")
+            del str_intro, str_targt, str_extnt, str_sourc, str_where
+
+            # :: extract 1km2 + 2km buffer of Internal walls to .shp file
+            # rem k.barriere
+
+            # run a septi_view on general view to output a
+            fil_batch.write("\n:: run a septi_view on general view to output a\n")
+            str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe general "
+            str_attrib = "--idatt dar_id --zatt z "
+            str_demdsm = "{}_dhmdsm.tif ".format(str_cell_name)
+            str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
+            str_outfil = "{}_gen.csv".format(str_cell_name)
+            fil_batch.write(str_exefil + str_attrib + str_demdsm + str_udgobj + str_outfil +"\n")
+            del str_exefil, str_attrib, str_demdsm, str_udgobj, str_outfil
 
             fil_batch.flush()
-            sys.exit(1)
-
-            # Create copy of relevant coast line
-            noget = tilename_to_extent(sub_cell, num_shot_length)
-            log(str_cmd_call, 10, fil_over_cell_log)
-            str_coast_file = "{}cl_{}.shp".format(str_over_dir, sub_cell)
-            str_cmd_call = 'ogr2ogr -overwrite -f "ESRI Shapefile" {} PG:"host=c1400067 user=brian dbname=pgv password=igenigen" "dec2016lev.pgv_kildedata_kystlinje" -clipsrc {} {} {} {}'.format(
-                str_coast_file, noget[0], noget[1], noget[2], noget[3])
-            log(str_cmd_call, 10, fil_over_cell_log)
-            if not bol_cosat_is_pregenerated:
-                subprocess.call(str_cmd_call, shell=True)
-            else:
-                log(" - skipping due to: bol_cosat_is_pregenerated", 10, fil_over_cell_log)
+            continue # skip rest of this cell
+            ###########################################################################################################
 
             # Name UO shp. file
             str_uo_file = "{1}uo_{0}.shp".format(sub_cell, str_over_dir)
@@ -134,7 +182,7 @@ if __name__=="__main__":
     str_main_workdir = "."  # Where the job-files go
 
     # open log file
-    fil_log = open(str_main_workdir + "make_udsigt_run.log", "w")
+    fil_log = open("make_udsigt_run.log", "w")
     log("Init", 10, fil_log)
 
     try:
