@@ -48,7 +48,7 @@ if not "%jobman_keep_temp_files%" == "true" (
   del 1km_6172_691_lakesh.* /Q /F
 )
 
-:: move 3x output + 3x septi_view.log to a safe place
+:: copy .log to a safe place
 dir
 
 :: complete a jobman_cell_xxx.log

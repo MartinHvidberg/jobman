@@ -50,18 +50,6 @@ def tilename_to_extent(tilename,buf=0):
     xt=(E*tile_size-buf,N*tile_size-buf,(E+1)*tile_size+buf,(N+1)*tile_size+buf)
     return xt
 
-def XXXlist_1km_in_10km_cell(str_10km_cell_name):
-    lst_tok = str_10km_cell_name.strip().strip('"').split("_")
-    if len(lst_tok) == 3 and lst_tok[0] == "10km":
-        lst_ret = list()
-        #print str_10km_cell_name
-        for i in range(10):
-            for j in range(10):
-                lst_ret.append("1km_"+lst_tok[1]+str(i)+"_"+lst_tok[2]+str(j))
-        return lst_ret
-    else:
-        log("ERROR - can't make 1km celles of 10km cell: "+str(str_10km_cell_name), 40)
-        return 999
 
 def build_all_jobs(lst_all_cells, str_main_workdir):
 
@@ -141,51 +129,66 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
 
             # run a septi_view on general view, and bring the results to safety
             fil_batch.write("\n:: run a septi_view on general view\n")
-            str_exefil = "call ..\..\Executables\septima_view_v0.0.3.exe general "
+            str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe general "
             str_attrib = "--idatt dar_id --zatt z "
             str_demdsm = "{}_dhmdsm.tif ".format(str_cell_name)
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
             str_outfil = "{}_gen.csv".format(str_cell_name)
-            if bol_run_septiview: # Hide this until it works...
-                fil_batch.write(str_exefil + str_attrib + str_demdsm + str_udgobj + str_outfil +"\n")
-            else:
-                fil_batch.write("echo 'dummy septiview result...'  > {}\n".format(str_outfil))
+            fil_batch.write(str_exefil + str_attrib + str_demdsm + str_udgobj + str_outfil +"\n")
             fil_batch.write("copy {} {} /A /V /Y \n".format(str_outfil,str_safety))
             del str_exefil, str_attrib, str_demdsm, str_udgobj, str_outfil
 
             # run a septi_view on sea view, and bring the results to safety
+            fil_batch.write("\n:: run a septi_view on general view\n")
+            str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe sea "
+            str_attrib = "--idatt dar_id --zatt z "
+            str_demdsm = "{}_dhmdsm.tif ".format(str_cell_name)
+            str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
+            str_coalne = "{}_coastl.shp ".format(str_cell_name)
+            str_outfil = "{}_sea.csv".format(str_cell_name)
+            fil_batch.write(str_exefil + str_attrib + str_demdsm + str_udgobj + str_coalne + str_outfil +"\n")
+            fil_batch.write("copy {} {} /A /V /Y \n".format(str_outfil,str_safety))
+            del str_exefil, str_attrib, str_demdsm, str_udgobj, str_coalne, str_outfil
 
             # run a septi_view on lake view, and bring the results to safety
+            fil_batch.write("\n:: run a septi_view on general view\n")
+            str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe sea "
+            str_attrib = "--idatt dar_id --zatt z "
+            str_demdsm = "{}_dhmdsm.tif ".format(str_cell_name)
+            str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
+            str_coalne = "{}_lakesh.shp ".format(str_cell_name)
+            str_outfil = "{}_lak.csv".format(str_cell_name)
+            fil_batch.write(str_exefil + str_attrib + str_demdsm + str_udgobj + str_coalne + str_outfil +"\n")
+            fil_batch.write("copy {} {} /A /V /Y \n".format(str_outfil,str_safety))
+            del str_exefil, str_attrib, str_demdsm, str_udgobj, str_coalne, str_outfil
 
             # delete the temp .shp and .tiff files
-            fil_batch.write("if not \"%jobman_keep_temp_files%\" == \"true\" (\n")
+            fil_batch.write("\nif not \"%jobman_keep_temp_files%\" == \"true\" (\n")
             fil_batch.write("  del {}_udgobj.* /Q /F\n".format(str_cell_name))
             fil_batch.write("  del {}_dhmdsm.* /Q /F\n".format(str_cell_name))
             fil_batch.write("  del {}_coastl.* /Q /F\n".format(str_cell_name))
             fil_batch.write("  del {}_lakesh.* /Q /F )\n".format(str_cell_name))
 
             # finish log file
-            fil_batch.write("echo Done... >> {}\n".format(str_injob_logfile_name))
+            fil_batch.write("\necho Done... >> {}\n".format(str_injob_logfile_name))
             fil_batch.write("date /t >> {}\n".format(str_injob_logfile_name))
             fil_batch.write("time /t >> {}\n".format(str_injob_logfile_name))
 
             # copy the batch run's .log file to safety
-            fil_batch.write("copy {} {} /A /V /Y \n".format(str_injob_logfile_name,str_safety))
+            fil_batch.write("\ncopy {} {} /A /V /Y \n".format(str_injob_logfile_name,str_safety))
 
-            fil_batch.write("CD .." + "\n")
+            fil_batch.write("\nCD .." + "\n")
 
             fil_batch.flush()
 
 
 if __name__=="__main__":
 
-    ##bol_uo_is_pregenerated = False # False # Normally False, but can be True during debugging...
-    ##bol_cosat_is_pregenerated = False # True # Normally False, but can be True during debugging...
-    bol_run_septiview = False # Default = True, but should be False while testing on computers not running Septi_View.exe
+    ##bol_run_septiview = True # Default = True, but should be False while testing on computers not running Septi_View.exe
 
     num_shot_length = 2000 # SeptiView shoots 2km
-    str_fn_cell_list_1km = "cell_list_1km.txt"
-    str_main_workdir = "."  # Where the job-files go
+    str_fn_cell_list_1km = "DKN1km_case.csv"
+    str_main_workdir = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_master_udsi\Available"  # Where the job-files go
     str_safety = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\Collect_sequre" # A hardcoded place where important results are copied for safe keeping
 
     # open log file
@@ -204,3 +207,4 @@ if __name__=="__main__":
     build_all_jobs(lst_all_cells, str_main_workdir)
 
     log("Python script {} completed sucessfuly...".format(sys.argv[0]), 20)
+
