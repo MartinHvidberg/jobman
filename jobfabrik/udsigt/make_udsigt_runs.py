@@ -78,15 +78,15 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             fil_batch.write("IF EXIST {} (\n".format(str_injob_work_dir))
             fil_batch.write("DEL /F /S /  {}\n".format(str_injob_work_dir))
             fil_batch.write("RMDIR /S /Q {} )\n".format(str_injob_work_dir))
-            fil_batch.write("MKDIR{}\n".format(str_injob_work_dir))
+            fil_batch.write("MKDIR {}\n".format(str_injob_work_dir))
             fil_batch.write("CD {}\n".format(str_injob_work_dir))
 
             # start log file
             str_injob_logfile_name = str_cell_name+"_cell.log"
             fil_batch.write("\n:: start log file\n")
             fil_batch.write("echo log file for {} > {}\n".format(str_cell_name,str_injob_logfile_name))
-            fil_batch.write("date / t >> {}\n".format(str_injob_logfile_name))
-            fil_batch.write("time / t >> {}\n".format(str_injob_logfile_name))
+            fil_batch.write("date /t >> {}\n".format(str_injob_logfile_name))
+            fil_batch.write("time /t >> {}\n".format(str_injob_logfile_name))
             fil_batch.write("echo Start >> {}\n".format(str_injob_logfile_name))
 
             # set GDAL parameters
@@ -139,47 +139,54 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             # :: extract 1km2 + 2km buffer of Internal walls to .shp file
             # rem k.barriere
 
-            # run a septi_view on general view to output a
-            fil_batch.write("\n:: run a septi_view on general view to output a\n")
-            str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe general "
+            # run a septi_view on general view, and bring the results to safety
+            fil_batch.write("\n:: run a septi_view on general view\n")
+            str_exefil = "call ..\..\Executables\septima_view_v0.0.3.exe general "
             str_attrib = "--idatt dar_id --zatt z "
             str_demdsm = "{}_dhmdsm.tif ".format(str_cell_name)
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
             str_outfil = "{}_gen.csv".format(str_cell_name)
-            fil_batch.write(str_exefil + str_attrib + str_demdsm + str_udgobj + str_outfil +"\n")
+            if bol_run_septiview: # Hide this until it works...
+                fil_batch.write(str_exefil + str_attrib + str_demdsm + str_udgobj + str_outfil +"\n")
+            else:
+                fil_batch.write("echo 'dummy septiview result...'  > {}\n".format(str_outfil))
+            fil_batch.write("copy {} {} /A /V /Y \n".format(str_outfil,str_safety))
             del str_exefil, str_attrib, str_demdsm, str_udgobj, str_outfil
 
-            fil_batch.flush()
-            continue # skip rest of this cell
-            ###########################################################################################################
+            # run a septi_view on sea view, and bring the results to safety
 
-            # Name UO shp. file
-            str_uo_file = "{1}uo_{0}.shp".format(sub_cell, str_over_dir)
-            str_csv_file = str_uo_file.replace(".shp", ".csv")
-            str_cmd_call_gen = "septima_view.exe general --idatt dar_id --zatt pgv_uo_z {} {} {}".format(str_dem_file,
-                                                                                                         str_uo_file,
-                                                                                                         str_csv_file.replace(
-                                                                                                             "uo",
-                                                                                                             "gen"))
-            fil_batch.write(str_cmd_call_gen + "\n")
-            log(str_cmd_call_gen, 10, fil_over_cell_log)
-            str_cmd_call_hav = "septima_view.exe sea --idatt dar_id --zatt pgv_uo_z {} {} {} {}".format(str_dem_file,
-                                                                                                        str_uo_file,
-                                                                                                        str_coast_file,
-                                                                                                        str_csv_file.replace(
-                                                                                                            "uo",
-                                                                                                            "sea"))
-            fil_batch.write(str_cmd_call_hav + "\n")
-            log(str_cmd_call_hav, 10, fil_over_cell_log)
+            # run a septi_view on lake view, and bring the results to safety
+
+            # delete the temp .shp and .tiff files
+            fil_batch.write("if not \"%jobman_keep_temp_files%\" == \"true\" (\n")
+            fil_batch.write("  del {}_udgobj.* /Q /F\n".format(str_cell_name))
+            fil_batch.write("  del {}_dhmdsm.* /Q /F\n".format(str_cell_name))
+            fil_batch.write("  del {}_coastl.* /Q /F\n".format(str_cell_name))
+            fil_batch.write("  del {}_lakesh.* /Q /F )\n".format(str_cell_name))
+
+            # finish log file
+            fil_batch.write("echo Done... >> {}\n".format(str_injob_logfile_name))
+            fil_batch.write("date /t >> {}\n".format(str_injob_logfile_name))
+            fil_batch.write("time /t >> {}\n".format(str_injob_logfile_name))
+
+            # copy the batch run's .log file to safety
+            fil_batch.write("copy {} {} /A /V /Y \n".format(str_injob_logfile_name,str_safety))
+
+            fil_batch.write("CD .." + "\n")
+
+            fil_batch.flush()
 
 
 if __name__=="__main__":
 
     ##bol_uo_is_pregenerated = False # False # Normally False, but can be True during debugging...
     ##bol_cosat_is_pregenerated = False # True # Normally False, but can be True during debugging...
+    bol_run_septiview = False # Default = True, but should be False while testing on computers not running Septi_View.exe
+
     num_shot_length = 2000 # SeptiView shoots 2km
     str_fn_cell_list_1km = "cell_list_1km.txt"
     str_main_workdir = "."  # Where the job-files go
+    str_safety = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\Collect_sequre" # A hardcoded place where important results are copied for safe keeping
 
     # open log file
     fil_log = open("make_udsigt_run.log", "w")
