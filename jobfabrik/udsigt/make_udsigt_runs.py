@@ -125,7 +125,7 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             del str_intro, str_targt, str_extnt, str_sourc, str_where
 
             # :: extract 1km2 + 2km buffer of Internal walls to .shp file
-            # rem k.barriere
+            # rem k.barrierecd ..
 
             # run a septi_view on general view, and bring the results to safety
             fil_batch.write("\n:: run a septi_view on general view\n")
