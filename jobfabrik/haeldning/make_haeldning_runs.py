@@ -1,6 +1,8 @@
 # !/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+# Build 20170614
+
 import sys
 import os
 import datetime
@@ -55,6 +57,10 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             fil_batch.write("date /t >> {}\n".format(str_injob_logfile_name))
             fil_batch.write("time /t >> {}\n".format(str_injob_logfile_name))
 
+            # move the results and log to safety
+            fil_batch.write("\nmove {}.ecr {} /Y \n".format(str_cell_name, str_safety))
+            fil_batch.write("\nmove {}.ecl {} /Y \n".format(str_cell_name, str_safety))
+
             # copy the batch run's .log file to safety
             fil_batch.write("\ncopy {} {} /A /V /Y \n".format(str_injob_logfile_name, str_safety))
 
@@ -65,9 +71,9 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
 
 if __name__ == "__main__":
 
-    str_fn_cell_list_1km = "Anholt_cells.txt"
+    str_fn_cell_list_1km = "dkn1km_paa_land_lables.scsv"
     str_main_workdir = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_master_sloasp\Available"  # Where the job-files go
-    str_safety = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\Collect_sequre_sloasp"  # A hardcoded place where important results are copied for safe keeping
+    str_safety = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_master_SloAsp\ResultReturn"  # A hardcoded place where important results are copied for safe keeping
 
     # open log file
     fil_log = open("make_sloasp_run.log", "w")
