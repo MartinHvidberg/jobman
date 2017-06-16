@@ -1,6 +1,6 @@
 # jobman
 Job Manager
-![Logo](https://raw.githubusercontent.com/MartinHvidberg/jobman/master/JobMan_logo_100_127pix.png)
+![Logo](https://raw.githubusercontent.com/MartinHvidberg/jobman/master/doc/JobMan_logo_100_127pix.png)
 
 I had a calculation that just took too long.
 Dividing the input data in 16 pieces, and ran the calculation in parallel in 16 individual command line windows (dos-prompts), it still took three weeks.
