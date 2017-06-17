@@ -72,7 +72,7 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
 if __name__ == "__main__":
 
     #str_fn_cell_list_1km = "dkn1km_paa_land_lables.scsv"
-    str_fn_cell_list_1km = "one_cell.txt"
+    str_fn_cell_list_1km = "dkn1km_paa_land_lables.scsv"
     str_main_workdir = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_master_sloasp\Available"  # Where the job-files go
     str_safety = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_master_SloAsp\ResultReturn"  # A hardcoded place where important results are copied for safe keeping
 
