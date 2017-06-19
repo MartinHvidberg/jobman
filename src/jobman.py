@@ -26,8 +26,9 @@ Plan:
     Delete all local files, i.e empty local work-directory
 
 ToDo
-    When job pool is empty, wait for busy jobs to complete
-    Send .jmlog to L rather than t C/D
+    * When job pool is empty, wait for busy jobs to complete (seems to have been fixed?)
+    * Send .jmlog to L rather than t C/D
+    * make 'hammer time' floting, to better ensure 100% cpu use
 """
 
 __version__ = "1.0.1"
