@@ -57,7 +57,7 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
         log("Running cell: {}".format(str_cell_name), 20)
         
         # Open new .bat file
-        str_batch_fn = str_main_workdir+"\\udsigt_run_"+str_cell_name+".bat"
+        str_batch_fn = str_main_workdir+"\\run_uds_"+str_cell_name+".bat"
         with open(str_batch_fn, "w") as fil_batch:
 
             # create work dir
@@ -80,7 +80,6 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             # set GDAL parameters
             fil_batch.write("\n:: set GDAL parameters\n")
             fil_batch.write("SET GDAL_CACHEMAX=1600\n")
-            fil_batch.write("rem GDAL_SWATH_SIZE=?\n")
 
             # calc cell extent coordinates, with and without buffer
             #lst_cell_ext_only = tilename_to_extent(str_cell_name, 0) # not used as udsigts points are selected by attribute (faster)
@@ -96,13 +95,13 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             del str_intro, str_targt, str_sourc, str_where
 
             # extract 1km2 + 2km buffer of DTM to .tiff
-            fil_batch.write("\n:: extract 1km2 + 2km buffer of DTM to .tiff\n")
-            str_intro = "gdalwarp -overwrite "
-            str_extnt = "-te {} {} {} {} ".format(lst_cell_ext_buff[0], lst_cell_ext_buff[1], lst_cell_ext_buff[2], lst_cell_ext_buff[3])
-            str_targt = r"\\C1503681\pgv2_E\DSM40\DSM_40_18052017.vrt "
-            str_sourc = "{}_dhmdsm.tif".format(str_cell_name)
-            fil_batch.write(str_intro + str_extnt + str_targt + str_sourc+"\n")
-            del str_intro, str_extnt, str_targt, str_sourc
+            ##fil_batch.write("\n:: extract 1km2 + 2km buffer of DTM to .tiff\n")
+            ##str_intro = "gdalwarp -overwrite "
+            ##str_extnt = "-te {} {} {} {} ".format(lst_cell_ext_buff[0], lst_cell_ext_buff[1], lst_cell_ext_buff[2], lst_cell_ext_buff[3])
+            ##str_targt = r"\\C1503681\pgv2_E\DSM40\DSM_40_18052017.vrt "
+            ##str_sourc = "{}_dhmdsm.tif".format(str_cell_name)
+            ##fil_batch.write(str_intro + str_extnt + str_targt + str_sourc+"\n")
+            ##del str_intro, str_extnt, str_targt, str_sourc
 
             # extract 1km2 + 2km buffer of Coast line to .shp file
             fil_batch.write("\n:: extract 1km2 + 2km buffer of Coast line to .shp file\n")
@@ -125,47 +124,67 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             del str_intro, str_targt, str_extnt, str_sourc, str_where
 
             # :: extract 1km2 + 2km buffer of Internal walls to .shp file
-            # rem k.barrierecd ..
+            fil_batch.write("\n:: extract 1km2 + 2km buffer of Internal walls to a .shp file\n")
+            fil_batch.write("rem k.barrierecd ..\n")
 
             # run a septi_view on general view, and bring the results to safety
             fil_batch.write("\n:: run a septi_view on general view\n")
             str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe general "
             str_attrib = "--idatt dar_id --zatt z "
-            str_demdsm = "{}_dhmdsm.tif ".format(str_cell_name)
+            str_demdsm = r"D:\scripts\udsigtsraster\DTM\udsigtsraster\buffer2m.vrt "
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
             str_outfil = "{}_gen.csv".format(str_cell_name)
             fil_batch.write(str_exefil + str_attrib + str_demdsm + str_udgobj + str_outfil +"\n")
             fil_batch.write("copy {} {} /A /V /Y \n".format(str_outfil,str_safety))
             del str_exefil, str_attrib, str_demdsm, str_udgobj, str_outfil
+            fil_batch.write("IF %ERRORLEVEL% NEQ 0 ECHO %ERRORLEVEL%\n")
+            fil_batch.write("ECHO 'Succes: septiview {}' >> {}_cell.log\n".format("GEN", str_cell_name))
 
             # run a septi_view on sea view, and bring the results to safety
             fil_batch.write("\n:: run a septi_view on general view\n")
             str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe sea "
             str_attrib = "--idatt dar_id --zatt z "
-            str_demdsm = "{}_dhmdsm.tif ".format(str_cell_name)
+            str_demdsm = r"D:\scripts\udsigtsraster\DTM\udsigtsraster\buffer2m.vrt "
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
             str_coalne = "{}_coastl.shp ".format(str_cell_name)
             str_outfil = "{}_sea.csv".format(str_cell_name)
             fil_batch.write(str_exefil + str_attrib + str_demdsm + str_udgobj + str_coalne + str_outfil +"\n")
             fil_batch.write("copy {} {} /A /V /Y \n".format(str_outfil,str_safety))
             del str_exefil, str_attrib, str_demdsm, str_udgobj, str_coalne, str_outfil
+            fil_batch.write("IF %ERRORLEVEL% NEQ 0 ECHO %ERRORLEVEL%\n")
+            fil_batch.write("ECHO 'Succes: septiview {}' >> {}_cell.log\n".format("SEA", str_cell_name))
 
             # run a septi_view on lake view, and bring the results to safety
             fil_batch.write("\n:: run a septi_view on general view\n")
             str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe sea "
             str_attrib = "--idatt dar_id --zatt z "
-            str_demdsm = "{}_dhmdsm.tif ".format(str_cell_name)
+            str_demdsm = r"D:\scripts\udsigtsraster\DTM\udsigtsraster\buffer2m.vrt "
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
             str_coalne = "{}_lakesh.shp ".format(str_cell_name)
             str_outfil = "{}_lak.csv".format(str_cell_name)
             fil_batch.write(str_exefil + str_attrib + str_demdsm + str_udgobj + str_coalne + str_outfil +"\n")
             fil_batch.write("copy {} {} /A /V /Y \n".format(str_outfil,str_safety))
             del str_exefil, str_attrib, str_demdsm, str_udgobj, str_coalne, str_outfil
+            fil_batch.write("IF %ERRORLEVEL% NEQ 0 ECHO %ERRORLEVEL%\n")
+            fil_batch.write("ECHO 'Succes: septiview {}' >> {}_cell.log\n".format("LAK", str_cell_name))
+
+
+            # :: copy results to PostgreSQL
+            fil_batch.write(":: copy results to PostgreSQL")
+            fil_batch.write("SET PGHOST=c1503681")
+            fil_batch.write("SET PGPORT=5433")
+            fil_batch.write("SET PGUSER=brian")
+            fil_batch.write("SET PGPASSWORD=igenigen")
+            fil_batch.write("SET PGDATABASE=pgv_2017")
+            fil_batch.write("psql --command=\"\\copy h.pgv_udsigtudg_udsigt_gen from {}_gen.csv WITH DELIMITER ';'\"".format(str_cell_name))
+            fil_batch.write("psql --command=\"\\copy h.pgv_udsigtudg_udsigt_sea from {}_sea.csv WITH DELIMITER ';'\"".format(str_cell_name))
+            fil_batch.write("psql --command=\"\\copy h.pgv_udsigtudg_udsigt_lak from {}_lak.csv WITH DELIMITER ';'\"".format(str_cell_name))
+            fil_batch.write("IF %ERRORLEVEL% NEQ 0 ECHO %ERRORLEVEL%")
+            fil_batch.write("ECHO 'Succes: psql' >> {}_cell.log".format(str_cell_name))
 
             # delete the temp .shp and .tiff files
             fil_batch.write("\nif not \"%jobman_keep_temp_files%\" == \"true\" (\n")
             fil_batch.write("  del {}_udgobj.* /Q /F\n".format(str_cell_name))
-            fil_batch.write("  del {}_dhmdsm.* /Q /F\n".format(str_cell_name))
             fil_batch.write("  del {}_coastl.* /Q /F\n".format(str_cell_name))
             fil_batch.write("  del {}_lakesh.* /Q /F )\n".format(str_cell_name))
 
@@ -187,7 +206,7 @@ if __name__=="__main__":
     ##bol_run_septiview = True # Default = True, but should be False while testing on computers not running Septi_View.exe
 
     num_shot_length = 2000 # SeptiView shoots 2km
-    str_fn_cell_list_1km = "DKN1km_case.csv"
+    str_fn_cell_list_1km = "cell_samp_1km.txt"
     str_main_workdir = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_master_udsi\Available"  # Where the job-files go
     str_safety = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\Collect_sequre" # A hardcoded place where important results are copied for safe keeping
 
