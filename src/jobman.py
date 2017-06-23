@@ -31,8 +31,8 @@ ToDo
     * make 'hammer time' floting, to better ensure 100% cpu use
 """
 
-__version__ = "1.0.1"
-__build__ = "2017-05-06 20.00"
+__version__ = "1.0.2"
+__build__ = "2017-06-23 12.34"
 
 def print_and_log(str_message, level='Info'):
     print str_message

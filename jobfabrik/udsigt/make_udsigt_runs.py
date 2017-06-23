@@ -77,6 +77,10 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             fil_batch.write("time /t >> {}\n".format(str_injob_logfile_name))
             fil_batch.write("echo Start >> {}\n".format(str_injob_logfile_name))
 
+            #  map network drive on server
+            fil_batch.write("\n:: map network drive on server\n")
+            fil_batch.write(r"net use a: \\C1503681\pgv2_Q\pgv_k_udsigtshoejdemodel")
+
             # set GDAL parameters
             fil_batch.write("\n:: set GDAL parameters\n")
             fil_batch.write("SET GDAL_CACHEMAX=1600\n")
@@ -131,43 +135,42 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             fil_batch.write("\n:: run a septi_view on general view\n")
             str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe general "
             str_attrib = "--idatt dar_id --zatt z "
-            str_demdsm = r"D:\scripts\udsigtsraster\DTM\udsigtsraster\buffer2m.vrt "
+            str_demdsm = r"a:\pgv_k_udsigtshoejdemodel.vrt "
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
             str_outfil = "{}_gen.csv".format(str_cell_name)
             fil_batch.write(str_exefil + str_attrib + str_demdsm + str_udgobj + str_outfil +"\n")
+            fil_batch.write("IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%\n")
             fil_batch.write("copy {} {} /A /V /Y \n".format(str_outfil,str_safety))
-            del str_exefil, str_attrib, str_demdsm, str_udgobj, str_outfil
-            fil_batch.write("IF %ERRORLEVEL% NEQ 0 ECHO %ERRORLEVEL%\n")
             fil_batch.write("ECHO 'Succes: septiview {}' >> {}_cell.log\n".format("GEN", str_cell_name))
+            del str_exefil, str_attrib, str_demdsm, str_udgobj, str_outfil
 
             # run a septi_view on sea view, and bring the results to safety
-            fil_batch.write("\n:: run a septi_view on general view\n")
+            fil_batch.write("\n:: run a septi_view on sea view\n")
             str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe sea "
             str_attrib = "--idatt dar_id --zatt z "
-            str_demdsm = r"D:\scripts\udsigtsraster\DTM\udsigtsraster\buffer2m.vrt "
+            str_demdsm = r"a:\pgv_k_udsigtshoejdemodel.vrt "
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
             str_coalne = "{}_coastl.shp ".format(str_cell_name)
             str_outfil = "{}_sea.csv".format(str_cell_name)
             fil_batch.write(str_exefil + str_attrib + str_demdsm + str_udgobj + str_coalne + str_outfil +"\n")
+            fil_batch.write("IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%\n")
             fil_batch.write("copy {} {} /A /V /Y \n".format(str_outfil,str_safety))
-            del str_exefil, str_attrib, str_demdsm, str_udgobj, str_coalne, str_outfil
-            fil_batch.write("IF %ERRORLEVEL% NEQ 0 ECHO %ERRORLEVEL%\n")
             fil_batch.write("ECHO 'Succes: septiview {}' >> {}_cell.log\n".format("SEA", str_cell_name))
+            del str_exefil, str_attrib, str_demdsm, str_udgobj, str_coalne, str_outfil
 
             # run a septi_view on lake view, and bring the results to safety
-            fil_batch.write("\n:: run a septi_view on general view\n")
+            fil_batch.write("\n:: run a septi_view on lake view\n")
             str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe sea "
             str_attrib = "--idatt dar_id --zatt z "
-            str_demdsm = r"D:\scripts\udsigtsraster\DTM\udsigtsraster\buffer2m.vrt "
+            str_demdsm = r"a:\pgv_k_udsigtshoejdemodel.vrt "
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
             str_coalne = "{}_lakesh.shp ".format(str_cell_name)
             str_outfil = "{}_lak.csv".format(str_cell_name)
             fil_batch.write(str_exefil + str_attrib + str_demdsm + str_udgobj + str_coalne + str_outfil +"\n")
+            fil_batch.write("IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%\n")
             fil_batch.write("copy {} {} /A /V /Y \n".format(str_outfil,str_safety))
-            del str_exefil, str_attrib, str_demdsm, str_udgobj, str_coalne, str_outfil
-            fil_batch.write("IF %ERRORLEVEL% NEQ 0 ECHO %ERRORLEVEL%\n")
             fil_batch.write("ECHO 'Succes: septiview {}' >> {}_cell.log\n".format("LAK", str_cell_name))
-
+            del str_exefil, str_attrib, str_demdsm, str_udgobj, str_coalne, str_outfil
 
             # :: copy results to PostgreSQL
             fil_batch.write("\n:: copy results to PostgreSQL")
@@ -179,7 +182,7 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             fil_batch.write("psql --command=\"\\copy h.pgv_udsigtudg_udsigt_gen from {}_gen.csv WITH DELIMITER ';'\"\n".format(str_cell_name))
             fil_batch.write("psql --command=\"\\copy h.pgv_udsigtudg_udsigt_sea from {}_sea.csv WITH DELIMITER ';'\"\n".format(str_cell_name))
             fil_batch.write("psql --command=\"\\copy h.pgv_udsigtudg_udsigt_lak from {}_lak.csv WITH DELIMITER ';'\"\n".format(str_cell_name))
-            fil_batch.write("IF %ERRORLEVEL% NEQ 0 ECHO %ERRORLEVEL%\n")
+            fil_batch.write("IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%\n")
             fil_batch.write("ECHO 'Succes: psql' >> {}_cell.log\n".format(str_cell_name))
 
             # delete the temp .shp and .tiff files
@@ -206,10 +209,10 @@ if __name__=="__main__":
     ##bol_run_septiview = True # Default = True, but should be False while testing on computers not running Septi_View.exe
 
     num_shot_length = 2000 # SeptiView shoots 2km
-    str_fn_cell_list_1km = "cell_samp_1km.txt"
+    str_fn_cell_list_1km = "cell_list_1km.txt"
     str_main_workdir = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_master_udsi\Available"  # Where the job-files go
-    str_main_workdir = r"R:\Martin\JobMan_work_udsi\workers"  # <-- for test
-    str_safety = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\Collect_sequre" # A hardcoded place where important results are copied for safe keeping
+    ##str_main_workdir = r"R:\Martin\JobMan_work_udsi\workers"  # <-- for test
+    str_safety = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_master_udsi\Results_copy" # A hardcoded place where important results are copied for safe keeping
 
     # open log file
     fil_log = open("make_udsigt_run.log", "w")
