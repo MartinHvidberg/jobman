@@ -30,7 +30,14 @@ ToDo
     * Send .jmlog to L rather than t C/D
     * make 'hammer time' floting, to better ensure 100% cpu use
     * re-read config at intervals
-    * have jobman react to keypress, e.g. s="don't take new jobs, and stop when done" 
+    * have jobman react to keypress, e.g. 
+        h = Help "display list of keypress options, and continue"
+        v = Version "type JobMan version, and continue"
+        s = Status "type some status info, and continue"
+        c = Config "Re-read the config file"
+        + = increase "+1 on number of processes"
+        - = decrease "-1 on number of processes"
+        q = Quit "don't take new jobs, and stop when done"
 """
 
 __version__ = "1.0.3"
