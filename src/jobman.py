@@ -299,8 +299,6 @@ if __name__ == "__main__":
 
     while bol_more_left or len(dic_pro)>0:  # more left or more busy
 
-        # Look for keypressed, and write status, and maybe handle different keypress?
-
         # Check on running jobs
         while len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
             print "All processes running: {} of {}. JobMan sleeping for {} seconds".format(len(dic_pro), num_max_pr, num_htime)
@@ -314,5 +312,7 @@ if __name__ == "__main__":
             bol_more_left, dic_pro = start_new_process(dic_pro)
         ##if len(dic_pro)>0:  # Still more busy - XXX this may not be needed after bol_more_busy was replaced by len(dic_pro)>0
         ##    dic_pro = handle_completed_processes(dic_pro)  # Nessisary to process last jobs, after pool is empty
+
+        # Look for keypressed, and write status, and maybe handle different keypress?
 
     print_and_log("JobMan complete...", "info")
