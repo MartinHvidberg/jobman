@@ -26,6 +26,7 @@ From a list of ID's of all relevant 1km cell names...
         complete a jobman_cell_xxx.log 
 """
 
+__version__ = "$ 0.1 build 20170629a $"
 
 def log(str_text,level,file=""):
     """ CRITICAL 50, ERROR 40, WARNING 30, INFO 20, DEBUG 10, NOTSET 0 """
@@ -84,6 +85,7 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             # set GDAL parameters
             fil_batch.write("\n:: set GDAL parameters\n")
             fil_batch.write("SET GDAL_CACHEMAX=1600\n")
+            fil_batch.write("SET GDAL_DRIVER_PATH=\n")
 
             # calc cell extent coordinates, with and without buffer
             #lst_cell_ext_only = tilename_to_extent(str_cell_name, 0) # not used as udsigts points are selected by attribute (faster)
@@ -173,7 +175,7 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             del str_exefil, str_attrib, str_demdsm, str_udgobj, str_coalne, str_outfil
 
             # :: copy results to PostgreSQL
-            fil_batch.write("\n:: copy results to PostgreSQL")
+            fil_batch.write("\n:: copy results to PostgreSQL\n")
             fil_batch.write("SET PGHOST=c1503681\n")
             fil_batch.write("SET PGPORT=5433\n")
             fil_batch.write("SET PGUSER=brian\n")
@@ -209,8 +211,8 @@ if __name__=="__main__":
     ##bol_run_septiview = True # Default = True, but should be False while testing on computers not running Septi_View.exe
 
     num_shot_length = 2000 # SeptiView shoots 2km
-    str_fn_cell_list_1km = "cell_stump_1km.txt"
-    str_main_workdir = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_master_udsi\Available"  # Where the job-files go
+    str_fn_cell_list_1km = "cell_samp_1km.txt"
+    str_main_workdir = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_master_udsi\pause\handheld"  # Where the job-files go
     ##str_main_workdir = r"R:\Martin\JobMan_work_udsi\workers"  # <-- for test
     str_safety = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_master_udsi\Results_copy" # A hardcoded place where important results are copied for safe keeping
 
