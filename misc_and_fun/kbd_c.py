@@ -1,4 +1,5 @@
-Thanks for the help. I ended up writing a C DLL called PyKeyboardAccess.dll and accessing the crt conio functions, exporting this routine:
+Thanks for the help. I ended up writing a C DLL called PyKeyboardAccess.dll
+and accessing the crt conio functions, exporting this routine:
 
 #include <conio.h>
 
