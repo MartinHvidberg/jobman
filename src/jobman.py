@@ -8,6 +8,7 @@ import random
 import datetime
 import time
 import subprocess
+import yaml
 # import from 3'rd party
 # import home grown...
 
@@ -24,25 +25,30 @@ Plan:
         move job file from /Busy to /Completed, else
         move job tile from /Busy to /Discarded
     Delete all local files, i.e empty local work-directory
+    
+History
+  ver 1.0.4 - introducing jobman_pilot.yaml as keypress seems to be difficult to handle
 
 ToDo
     * When job pool is empty, wait for busy jobs to complete (seems to have been fixed?)
     * Send .jmlog to L rather than t C/D
     * make 'hammer time' floating, to better ensure 100% cpu use
     * re-read config at intervals
-    * have jobman react to keypress, e.g. 
-        h = Help "display list of keypress options, and continue"
-        v = Version "type JobMan version, and continue"
-        s = Status "type some status info, and continue"
-        c = Config "Re-read the config file"
-        + = increase "+1 on number of processes"
-        - = decrease "-1 on number of processes"
-        q = Quit "don't take new jobs, and stop when done"
-      meanwhile substituted by the pilot.file
+    * have jobman react to keypress, e.g. - Seems to be difficult in Python
+        h  = Help "display list of keypress options, and continue"
+        v  = Version "type JobMan version, and continue"
+        s  = Status "type some status info, and continue"
+        c' = Config "Re-read the config file"
+        +  = increase "+1 on number of processes"
+        -  = decrease "-1 on number of processes"
+        q' = Quit "don't take new jobs, and stop when done"
+        (') meanwhile substituted by the jobman_pilot.yaml
+    * Change jobman.config to yaml format
 """
 
 __version__ = "1.0.4"
 __build__ = "2017-07-01ff"
+
 
 def print_and_log(str_message, level='Info'):
     print str_message
@@ -57,14 +63,33 @@ def print_and_log(str_message, level='Info'):
 
 
 def read_config_file(str_fn):
-    dic_conf = dict()
+    dic_conf_l = dict()
     fil_conf = open(str_fn, "r")
     if fil_conf:
         for line in fil_conf:
             lst_keyval = [strng.strip() for strng in line.strip().split("#", 1)[0].split(" ", 1)[:2] if strng != '']
             if len(lst_keyval) == 2:
-                dic_conf[lst_keyval[0].lower()] = lst_keyval[1]
-    return dic_conf
+                dic_conf_l[lst_keyval[0].lower()] = lst_keyval[1]
+    return dic_conf_l
+
+
+def read_pilot_file(str_fn, dic_conf_l):
+    jm_quit_l = False  # Default quit to False, for smooth except return
+    with open(str_fn, 'r') as fil:
+        try:
+            dic_conf_n = yaml.load(fil)
+        except yaml.YAMLError as exc:
+            print(exc)
+            return jm_quit_l, dic_conf_l  # return most harmless
+    if 'c' in dic_conf_n.keys():  # Re-read Config file
+        if dic_conf_n['c'] is True:
+            dic_conf_c = read_config_file(jm_config_file)
+            for k in dic_conf_c.keys():  # only replace keys found in file
+                dic_conf_l[k] = dic_conf_c[k]
+    if 'q' in dic_conf_n.keys():  # Quit JobMan
+        if dic_conf_n['q'] is True:
+            jm_quit_l = True
+    return jm_quit_l, dic_conf_l
 
 
 def check_write_access(str_dir):
@@ -135,6 +160,7 @@ def handle_completed_processes(dic_p):
         dic_p.pop(compproc)
     return dic_p
 
+
 def saferun_subprocess(str_args, str_workwork_dir):
     try:
         process = subprocess.Popen(str_args, shell=True, cwd=str_workwork_dir)  # XXX redirect stdout= to an existing file object
@@ -148,6 +174,7 @@ def saferun_subprocess(str_args, str_workwork_dir):
         print "Error - Unknown Popen() error"
         return None
     return process
+
 
 def start_new_process(dic_p):
     lst_a = list()
@@ -197,8 +224,13 @@ def start_new_process(dic_p):
 
 if __name__ == "__main__":
 
+    # Hardcoded parameters - could potentially be command line input
+    jm_session_log = "jobman.sessionlog"
+    jm_config_file = "jobman.config"
+    jm_pilot_file = "jobman_pilot.yaml"
+
     # Open a session log file
-    logging.basicConfig(filename='jobman.sessionlog', level=logging.DEBUG)
+    logging.basicConfig(filename=jm_session_log, level=logging.DEBUG)
     print_and_log("JobMan ver.{} - starting logfile...\n".format(__version__), "info")
 
     # Check if we are on windows or Linux
@@ -216,7 +248,7 @@ if __name__ == "__main__":
         print_and_log(" + OS identified...", "info")
 
     # Read the .config file
-    str_config_fn = "jobman.config"
+    str_config_fn = jm_config_file
     dic_conf = read_config_file(str_config_fn)
     print_and_log(" + Read config file: {}".format(str_config_fn), "info")
 
@@ -226,18 +258,18 @@ if __name__ == "__main__":
     else:
         print "Error - .config file don't specify a name"
         sys.exit(996)
-        print_and_log(" + Name of user: {}".format(str_worker_name), "info")
+    print_and_log(" + Name of user: {}".format(str_worker_name), "info")
 
     if 'computer' in dic_conf.keys():
         str_worker_comp = dic_conf['computer']
         if str_worker_comp == 'GE400':
-            print "Sorry - I can't do that...I'm not a General Electric 400-series computer."
+            print "I'm sorry {}, I'm afraid I can't do that. I'm not a General Electric 400-series computer.".format(dic_conf['name'])
             print "Please check if you have edited your local copy of jobman.config to reflect your actual computer."
             sys.exit(994)
     else:
         print "Error - .config file don't specify a computer"
         sys.exit(995)
-        print_and_log(" + Name of computer: {}".format(str_worker_comp), "info")
+    print_and_log(" + Name of computer: {}".format(str_worker_comp), "info")
 
     # Check, and clear, the local workdir
     if 'myworkdir' in dic_conf.keys():
@@ -304,6 +336,7 @@ if __name__ == "__main__":
     # Start running processes
     bol_more_left = True  # Just assume that /Available is non-empty, we will check later.
     dic_pro = dict()  # Dictionary holding the process-objects
+    jm_quit = False  # If this becomes True JobMan will finish current jobs and then quit
 
     while bol_more_left or len(dic_pro)>0:  # more left or more busy
 
@@ -314,7 +347,7 @@ if __name__ == "__main__":
             dic_pro = handle_completed_processes(dic_pro)
 
         # Start up new jobs
-        if bol_more_left:
+        if bol_more_left and not jm_quit:
             # Start a new thread.
             print "Not all processes are running: {} of {}. Trying to start new...".format(len(dic_pro), num_max_pr)
             bol_more_left, dic_pro = start_new_process(dic_pro)
@@ -323,5 +356,6 @@ if __name__ == "__main__":
 
         # Look for keypressed, and write status, and maybe handle different keypress?
         # Alternative to keypress - scan a pilot-file.
+        jm_quit, dic_conf = read_pilot_file(jm_pilot_file, dic_conf)
 
-    print_and_log("JobMan complete...", "info")
+    print_and_log("\nJobMan complete...", "info")

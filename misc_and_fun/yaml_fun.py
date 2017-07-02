@@ -1,6 +1,6 @@
 import yaml
 
-with open("jobman_pilot.yaml", 'r') as fil:
+with open("../src/jobman_pilot.yaml", 'r') as fil:
     try:
         data = yaml.load(fil)
         print str(type(data)), data
