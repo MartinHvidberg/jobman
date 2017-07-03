@@ -181,9 +181,9 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             fil_batch.write("SET PGUSER=brian\n")
             fil_batch.write("SET PGPASSWORD=igenigen\n")
             fil_batch.write("SET PGDATABASE=pgv_2017\n")
-            fil_batch.write("psql --command=\"\\copy h.pgv_udsigtudg_udsigt_gen from {}_gen.csv WITH DELIMITER ';'\"\n".format(str_cell_name))
-            fil_batch.write("psql --command=\"\\copy h.pgv_udsigtudg_udsigt_sea from {}_sea.csv WITH DELIMITER ';'\"\n".format(str_cell_name))
-            fil_batch.write("psql --command=\"\\copy h.pgv_udsigtudg_udsigt_lak from {}_lak.csv WITH DELIMITER ';'\"\n".format(str_cell_name))
+            fil_batch.write("psql --command=\"\\copy b.pgv_udsigtudg_udsigt_gen from {}_gen.csv WITH DELIMITER ';'\"\n".format(str_cell_name))
+            fil_batch.write("psql --command=\"\\copy b.pgv_udsigtudg_udsigt_sea from {}_sea.csv WITH DELIMITER ';'\"\n".format(str_cell_name))
+            fil_batch.write("psql --command=\"\\copy b.pgv_udsigtudg_udsigt_lak from {}_lak.csv WITH DELIMITER ';'\"\n".format(str_cell_name))
             fil_batch.write("IF %ERRORLEVEL% NEQ 0 EXIT /B %ERRORLEVEL%\n")
             fil_batch.write("ECHO 'Succes: psql' >> {}_cell.log\n".format(str_cell_name))
 
