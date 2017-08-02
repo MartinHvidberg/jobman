@@ -44,21 +44,21 @@ def tilename_to_extent(tilename,buf=0):
         tile_size = 10000 # 10km grid
     else:
         print "Error - Unknown DKN type: " + tilename
-        return (0,0,0,0)
-    N,E=lst_tokens[1:3]
-    N=int(N)
-    E=int(E)
-    xt=(E*tile_size-buf,N*tile_size-buf,(E+1)*tile_size+buf,(N+1)*tile_size+buf)
+        return 0,0,0,0
+    north,east=lst_tokens[1:3]
+    north=int(north)
+    east=int(east)
+    xt=(east*tile_size-buf,north*tile_size-buf,(east+1)*tile_size+buf,(north+1)*tile_size+buf)
     return xt
 
 
-def build_all_jobs(lst_all_cells, str_main_workdir):
+def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
 
-    for str_cell_name in lst_all_cells:
+    for str_cell_name in lst_all_cells_local:
         log("Running cell: {}".format(str_cell_name), 20)
         
         # Open new .bat file
-        str_batch_fn = str_main_workdir+"\\run_uds_"+str_cell_name+".bat"
+        str_batch_fn = str_main_workdir_local+"\\run_uds_"+str_cell_name+".bat"
         with open(str_batch_fn, "w") as fil_batch:
 
             # create work dir
