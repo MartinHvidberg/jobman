@@ -96,7 +96,7 @@ def build_all_jobs(lst_all_cells, str_main_workdir):
             str_intro = "ogr2ogr -overwrite "
             str_targt = "-f \"ESRI Shapefile\" {}_udgobj.shp ".format(str_cell_name)
             str_sourc = "PG:\"host=c1503681 port=5433 user=reader dbname=pgv_2017 password=hejskat\" "
-            str_where = "-sql \"SELECT dar_id, z, geom FROM k.pgv_udsigtudg_parcel WHERE dar_ddkn_km1 = '{}'\"".format(str_cell_name)
+            str_where = "-sql \"SELECT dar_id, z, geom FROM b.pgv_udsigtudg_enkeltbolig WHERE dar_ddkn_km1 = '{}'\"".format(str_cell_name)
             fil_batch.write(str_intro + str_targt + str_sourc + str_where+"\n")
             del str_intro, str_targt, str_sourc, str_where
 
@@ -213,7 +213,6 @@ if __name__=="__main__":
     num_shot_length = 2000 # SeptiView shoots 2km
     str_fn_cell_list_1km = "cell_samp_1km.txt"
     str_main_workdir = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_master_udsi\Available"  # Where the job-files go
-    ##str_main_workdir = r"R:\Martin\JobMan_work_udsi\workers"  # <-- for test
     str_safety = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_master_udsi\Results_copy" # A hardcoded place where important results are copied for safe keeping
 
     # open log file
