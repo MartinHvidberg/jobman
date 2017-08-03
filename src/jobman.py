@@ -28,6 +28,8 @@ Plan:
     
 History
   ver 1.0.4 - introducing jobman_pilot.yaml as keypress seems to be difficult to handle
+  ver 1.0.5 - Swapping a few lines in main, so it exits better after last job
+  ver 1.0.6 - Updating all 'print' to 'print_and_log()' :-)
 
 ToDo
     * When job pool is empty, wait for busy jobs to complete (seems to have been fixed?)
@@ -46,7 +48,7 @@ ToDo
     * Change jobman.config to yaml format
 """
 
-__version__ = "1.0.5"
+__version__ = "1.0.6"
 __build__ = "2017-08-03ff"
 
 
@@ -130,28 +132,28 @@ def handle_completed_processes(dic_p):
             for itms in sorted(dic_proc_i.keys()):
                 str_logline = "   $ {} : {}".format(itms, dic_proc_i[itms])
                 fil_jmlog.write(str_logline+"\n")
-                print str_logline
+                print_and_log(str_logline)
             fil_jmlog.close()
 
             # XXX Consider moving this block about 8 lines up, and include the include it in the logging ;-)
             # check for success
             if poll_n == 0:  # it has completed successfully
-                print "Proc comp. succ. {}".format(dic_proc_i['name'])
+                print_and_log("Proc comp. succ. {}".format(dic_proc_i['name']))
                 str_dest_dir = str_dir_c
             else:  # it has completed with error
-                print "Proc comp. FAIL. {}".format(dic_proc_i['name'])
+                print_and_log("Proc comp. FAIL. {}".format(dic_proc_i['name']), "warning")
                 str_dest_dir = str_dir_d
             # return all the files to /Master and clean up
             try:
                 shutil.move(dic_proc_i['workdir'],str_dest_dir)
             except:
-                print "Error - Can't move workdir back to master"
+                print_and_log("Error - Can't move workdir back to master", "error")
                 sys.exit(994)
             # Remove the job from /Busy
             try:
                 shutil.move(str_dir_b+str_osep+dic_proc_i['name']+".bat",str_dest_dir)
             except:
-                print "Error - Can't move Busy to Complete/Discarded: {} >> {}".format(str_dir_b+str_osep+dic_proc_i['name'],str_dest_dir)
+                print_and_log("Error - Can't move Busy to Complete/Discarded: {} >> {}".format(str_dir_b+str_osep+dic_proc_i['name'],str_dest_dir), "error")
                 sys.exit(993)
 
             # Mark process to be removed
@@ -165,13 +167,13 @@ def saferun_subprocess(str_args, str_workwork_dir):
     try:
         process = subprocess.Popen(str_args, shell=True, cwd=str_workwork_dir)  # XXX redirect stdout= to an existing file object
     except OSError as e:
-        print "Error - OSError says: {}".format(e.message)
+        print_and_log("Error - OSError says: {}".format(e.message), "error")
         return None
     except ValueError as e:
-        print "Error - ValueError says: {}".format(e.message)
+        print_and_log("Error - ValueError says: {}".format(e.message), "error")
         return None
     except:
-        print "Error - Unknown Popen() error"
+        print_and_log("Error - Unknown Popen() error", "error")
         return None
     return process
 
@@ -184,12 +186,12 @@ def start_new_process(dic_p):
         # We have a job to do...
         bol_more_left = True
         str_job = random.choice(lst_a)
-        print "I picked job: {}".format(str_job)
+        print_and_log("I picked job: {}".format(str_job))
         # Secure the file, so nobody else grabs it
         try:
             shutil.move(str_dir_a + str_osep + str_job, str_dir_b + str_osep + str_job)
         except:
-            print "... but I wasn't fast enough."
+            print_and_log("... but I wasn't fast enough.")
             str_job = None  # If unsuccessful the file may have been snatch by another worker, milli-seconds before us.
             return bol_more_left, dic_p
         # make and fill work-dir in work-dir
@@ -200,7 +202,7 @@ def start_new_process(dic_p):
         try:
             shutil.copyfile(str_dir_b + str_osep + str_job, str_workwork_dir + str_osep + str_job)
         except:
-            print "Error - Can't copy job file: {} Busy: {} Workdir: {}".format(str_job, str_dir_d, str_workwork_dir)
+            print_and_log("Error - Can't copy job file: {} Busy: {} Workdir: {}".format(str_job, str_dir_d, str_workwork_dir), "error")
             sys.exit(996)
         # Run...
         if str_job:
@@ -243,9 +245,9 @@ if __name__ == "__main__":
         #str_pyth = "C:\Python27\python.exe"
         #str_oext = ".bat"
     else:
-        print "Can't understand OS named: {}".format(os.name)
+        print_and_log("Can't understand OS named: {}".format(os.name), "info")
+        str_osep = ""
         exit(993)
-        print_and_log(" + OS identified...", "info")
 
     # Read the .config file
     str_config_fn = jm_config_file
@@ -256,18 +258,18 @@ if __name__ == "__main__":
     if 'name' in dic_conf.keys():
         str_worker_name = dic_conf['name']
     else:
-        print "Error - .config file don't specify a name"
+        print_and_log("Error - .config file don't specify a name", "error")
         sys.exit(996)
     print_and_log(" + Name of user: {}".format(str_worker_name), "info")
 
     if 'computer' in dic_conf.keys():
         str_worker_comp = dic_conf['computer']
         if str_worker_comp == 'GE400':
-            print "I'm sorry {}, I'm afraid I can't do that. I'm not a General Electric 400-series computer.".format(dic_conf['name'])
-            print "Please check if you have edited your local copy of jobman.config to reflect your actual computer."
+            print_and_log("I'm sorry {}, I'm afraid I can't do that. I'm not a General Electric 400-series computer.".format(dic_conf['name']), "error")
+            print_and_log("Please check if you have edited your local copy of jobman.config to reflect your actual computer.", "error")
             sys.exit(994)
     else:
-        print "Error - .config file don't specify a computer"
+        print_and_log("Error - .config file don't specify a computer", "error")
         sys.exit(995)
     print_and_log(" + Name of computer: {}".format(str_worker_comp), "info")
 
@@ -277,10 +279,10 @@ if __name__ == "__main__":
         if check_write_access(str_workdir):
             clear_dir(str_workdir)
         else:
-            print "Error - I can't write files to the specified work directory: {}".format(str_workdir)
+            print_and_log("Error - I can't write files to the specified work directory: {}".format(str_workdir), "error")
             sys.exit(992)
     else:
-        print "Error - The .config file contains no valid 'myworkdir'..."
+        print_and_log("Error - The .config file contains no valid 'myworkdir'...", "error")
         sys.exit(999)
     print_and_log(" + Work dir cleared: {}".format(str_workdir), "info")
 
@@ -288,7 +290,7 @@ if __name__ == "__main__":
     if 'jmjqmdir' in dic_conf.keys():
         str_master_dir = dic_conf['jmjqmdir']
     else:
-        print "Error - .config file don't specify a jmjqmdir"
+        print_and_log("Error - .config file don't specify a jmjqmdir", "error")
         sys.exit(997)
     # Check that Master directory contains directories A, B, C, D, E and L
     str_dir_a = str_master_dir + str_osep + "Available"
@@ -303,7 +305,7 @@ if __name__ == "__main__":
                 os.path.exists(str_dir_d),
                 os.path.exists(str_dir_e),
                 os.path.exists(str_dir_l)]):
-        print "Error - One or more of the expected directories A, B, C, D, E, and L are missing from {}".format(str_master_dir)
+        print_and_log("Error - One or more of the expected directories A, B, C, D, E, and L are missing from {}".format(str_master_dir), "error")
         sys.exit(999)
     print_and_log(" + Master dir found: {}".format(str_master_dir), "info")
 
@@ -323,11 +325,11 @@ if __name__ == "__main__":
         try:
             num_htime = int(dic_conf['hammertime'])
         except ValueError:
-            print "Warning - .config file holds non integer value for 'hammertime'"
+            print_and_log("Warning - .config file holds non integer value for 'hammertime'", "waning")
             # fall back on default value above...
     else:
-        print "Error - .config file don't specify a hammertime"
-        sys.exit(992)
+        print_and_log("Warning - .config file don't specify a hammertime", "waning")
+            # fall back on default value above...
     print_and_log(" + Hammer time set to: {} seconds".format(num_htime), "info")
 
     # All is Green - We are Good-to-go...
@@ -343,13 +345,13 @@ if __name__ == "__main__":
         # Check on running jobs
         dic_pro = handle_completed_processes(dic_pro)
         while len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
-            print "All processes running: {} of {}. JobMan sleeping for {} seconds".format(len(dic_pro), num_max_pr, num_htime)
+            print_and_log("All processes running: {} of {}. JobMan sleeping for {} seconds".format(len(dic_pro), num_max_pr, num_htime))
             time.sleep(num_htime)  # in seconds...
 
         # Start up new jobs
         if bol_more_left and not jm_quit:
             # Start a new thread.
-            print "Not all processes are running: {} of {}. Trying to start new...".format(len(dic_pro), num_max_pr)
+            print_and_log("Not all processes are running: {} of {}. Trying to start new...".format(len(dic_pro), num_max_pr))
             bol_more_left, dic_pro = start_new_process(dic_pro)
         ##if len(dic_pro)>0:  # Still more busy - XXX this may not be needed after bol_more_busy was replaced by len(dic_pro)>0
         ##    dic_pro = handle_completed_processes(dic_pro)  # Nessisary to process last jobs, after pool is empty
