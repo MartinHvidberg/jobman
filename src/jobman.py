@@ -46,8 +46,8 @@ ToDo
     * Change jobman.config to yaml format
 """
 
-__version__ = "1.0.4"
-__build__ = "2017-07-01ff"
+__version__ = "1.0.5"
+__build__ = "2017-08-03ff"
 
 
 def print_and_log(str_message, level='Info'):
