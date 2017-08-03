@@ -341,10 +341,10 @@ if __name__ == "__main__":
     while bol_more_left or len(dic_pro)>0:  # more left or more busy
 
         # Check on running jobs
+        dic_pro = handle_completed_processes(dic_pro)
         while len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
             print "All processes running: {} of {}. JobMan sleeping for {} seconds".format(len(dic_pro), num_max_pr, num_htime)
             time.sleep(num_htime)  # in seconds...
-            dic_pro = handle_completed_processes(dic_pro)
 
         # Start up new jobs
         if bol_more_left and not jm_quit:
