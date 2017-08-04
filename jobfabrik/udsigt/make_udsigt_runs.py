@@ -26,7 +26,11 @@ From a list of ID's of all relevant 1km cell names...
         complete a jobman_cell_xxx.log 
 """
 
-__version__ = "$ 0.1 build 20170629a $"
+# History
+# ver 0.1 works with 'enkeltbolig'
+# ver 0.2 works with 'flerbolig' including barriers
+
+__version__ = "$ 0.2 build 20170804 $"
 
 def log(str_text,level,file=""):
     """ CRITICAL 50, ERROR 40, WARNING 30, INFO 20, DEBUG 10, NOTSET 0 """
@@ -88,16 +92,27 @@ def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
             fil_batch.write("SET GDAL_DRIVER_PATH=\n")
 
             # calc cell extent coordinates, with and without buffer
-            #lst_cell_ext_only = tilename_to_extent(str_cell_name, 0) # not used as udsigts points are selected by attribute (faster)
+            lst_cell_ext_only = tilename_to_extent(str_cell_name, 0)
             lst_cell_ext_buff = tilename_to_extent(str_cell_name, num_shot_length)
 
             # extract 1km2 of UdgangsObj for Udsigt to .shp file
             fil_batch.write("\n:: extract 1km2 of UdgangsObj for Udsigt to .shp file\n")
             str_intro = "ogr2ogr -overwrite "
             str_targt = "-f \"ESRI Shapefile\" {}_udgobj.shp ".format(str_cell_name)
+            str_extnt = "-spat {} {} {} {} ".format(lst_cell_ext_only[0], lst_cell_ext_only[1], lst_cell_ext_only[2], lst_cell_ext_only[3])
             str_sourc = "PG:\"host=c1503681 port=5433 user=reader dbname=pgv_2017 password=hejskat\" "
-            str_where = "-sql \"SELECT dar_id, z, geom FROM b.pgv_udsigtudg_enkeltbolig WHERE dar_ddkn_km1 = '{}'\"".format(str_cell_name)
-            fil_batch.write(str_intro + str_targt + str_sourc + str_where+"\n")
+            str_where = "-sql \"SELECT dar_id, udsigts_hoejde as z, geom FROM temp_jonyp.opgangcentroider_m_hoejde\""
+            fil_batch.write(str_intro + str_targt + str_extnt + str_sourc + str_where+"\n")
+            del str_intro, str_targt, str_sourc, str_where
+
+            # extract 1km2 + 2km buffer of Internal Walls to a .shp file
+            fil_batch.write("\n:: extract 1km2 of Internal walls to a .shp file\n")
+            str_intro = "ogr2ogr -overwrite "
+            str_targt = "-f \"ESRI Shapefile\" {}_barrie.shp ".format(str_cell_name)
+            str_extnt = "-spat {} {} {} {} ".format(lst_cell_ext_only[0], lst_cell_ext_only[1], lst_cell_ext_only[2], lst_cell_ext_only[3])
+            str_sourc = "PG:\"host=c1503681 port=5433 user=reader dbname=pgv_2017 password=hejskat\" "
+            str_where = "-sql \"SELECT z, geom FROM temp_jonyp.pgv_barriere\""
+            fil_batch.write(str_intro + str_targt + str_extnt + str_sourc + str_where+"\n")
             del str_intro, str_targt, str_sourc, str_where
 
             # extract 1km2 + 2km buffer of DTM to .tiff
@@ -110,7 +125,7 @@ def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
             ##del str_intro, str_extnt, str_targt, str_sourc
 
             # extract 1km2 + 2km buffer of Coast line to .shp file
-            fil_batch.write("\n:: extract 1km2 + 2km buffer of Coast line to .shp file\n")
+            fil_batch.write("\n:: extract 1km2 (+ 2km buffer) of Coast line to .shp file\n")
             str_intro = "ogr2ogr -overwrite "
             str_targt = "-f \"ESRI Shapefile\" {}_coastl.shp ".format(str_cell_name)
             str_extnt = "-spat {} {} {} {} ".format(lst_cell_ext_buff[0], lst_cell_ext_buff[1], lst_cell_ext_buff[2], lst_cell_ext_buff[3])
@@ -120,7 +135,7 @@ def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
             del str_intro, str_targt, str_extnt, str_sourc, str_where
 
             # extract 1km2 + 2km buffer of Lake shore to .shp file
-            fil_batch.write("\n:: extract 1km2 + 2km buffer of Lake shore to .shp file\n")
+            fil_batch.write("\n:: extract 1km2 (+ 2km buffer) of Lake shore to .shp file\n")
             str_intro = "ogr2ogr -overwrite "
             str_targt = "-f \"ESRI Shapefile\" {}_lakesh.shp ".format(str_cell_name)
             str_extnt = "-spat {} {} {} {} ".format(lst_cell_ext_buff[0], lst_cell_ext_buff[1], lst_cell_ext_buff[2], lst_cell_ext_buff[3])
@@ -129,14 +144,12 @@ def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
             fil_batch.write(str_intro + str_targt + str_extnt + str_sourc + str_where+"\n")
             del str_intro, str_targt, str_extnt, str_sourc, str_where
 
-            # :: extract 1km2 + 2km buffer of Internal walls to .shp file
-            fil_batch.write("\n:: extract 1km2 + 2km buffer of Internal walls to a .shp file\n")
-            fil_batch.write("rem k.barrierecd ..\n")
-
             # run a septi_view on general view, and bring the results to safety
+            # call ..\..\..\Executables\septima_view_v0.0.3.exe general --idatt dar_id --zatt z --walls 1km_6158_703_barrie.shp --wallzatt z a:\pgv_k_udsigtshoejdemodel.vrt 1km_6158_703_udgobj.shp 1km_6158_703_gen.csv
+
             fil_batch.write("\n:: run a septi_view on general view\n")
             str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe general "
-            str_attrib = "--idatt dar_id --zatt z "
+            str_attrib = "--idatt dar_id --zatt z  --zatt z --walls {}_barrie.shp --wallzatt z ".format(str_cell_name)
             str_demdsm = r"a:\pgv_k_udsigtshoejdemodel.vrt "
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
             str_outfil = "{}_gen.csv".format(str_cell_name)
@@ -149,7 +162,7 @@ def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
             # run a septi_view on sea view, and bring the results to safety
             fil_batch.write("\n:: run a septi_view on sea view\n")
             str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe sea "
-            str_attrib = "--idatt dar_id --zatt z "
+            str_attrib = "--idatt dar_id --zatt z  --zatt z --walls {}_barrie.shp --wallzatt z ".format(str_cell_name)
             str_demdsm = r"a:\pgv_k_udsigtshoejdemodel.vrt "
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
             str_coalne = "{}_coastl.shp ".format(str_cell_name)
@@ -163,7 +176,7 @@ def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
             # run a septi_view on lake view, and bring the results to safety
             fil_batch.write("\n:: run a septi_view on lake view\n")
             str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe sea "
-            str_attrib = "--idatt dar_id --zatt z "
+            str_attrib = "--idatt dar_id --zatt z  --zatt z --walls {}_barrie.shp --wallzatt z ".format(str_cell_name)
             str_demdsm = r"a:\pgv_k_udsigtshoejdemodel.vrt "
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
             str_coalne = "{}_lakesh.shp ".format(str_cell_name)
@@ -188,20 +201,28 @@ def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
             fil_batch.write("ECHO 'Succes: psql' >> {}_cell.log\n".format(str_cell_name))
 
             # delete the temp .shp and .tiff files
-            fil_batch.write("\nif not \"%jobman_keep_temp_files%\" == \"true\" (\n")
+            fil_batch.write("\n:: delete the temp .shp and .tiff files\n")
+            fil_batch.write("if not \"%jobman_keep_temp_files%\" == \"true\" (\n")
             fil_batch.write("  del {}_udgobj.* /Q /F\n".format(str_cell_name))
+            fil_batch.write("  del {}_barrie.* /Q /F\n".format(str_cell_name))
             fil_batch.write("  del {}_coastl.* /Q /F\n".format(str_cell_name))
             fil_batch.write("  del {}_lakesh.* /Q /F )\n".format(str_cell_name))
 
             # finish log file
-            fil_batch.write("\necho Done... >> {}\n".format(str_injob_logfile_name))
+            fil_batch.write("\n:: finish log file\n")
+            fil_batch.write("echo Done... >> {}\n".format(str_injob_logfile_name))
             fil_batch.write("date /t >> {}\n".format(str_injob_logfile_name))
             fil_batch.write("time /t >> {}\n".format(str_injob_logfile_name))
 
             # copy the batch run's .log file to safety
-            fil_batch.write("\ncopy {} {} /A /V /Y \n".format(str_injob_logfile_name,str_safety))
+            fil_batch.write("\n:: copy the batch run's .log file to safety\n")
+            fil_batch.write("copy {} {} /A /V /Y \n".format(str_injob_logfile_name,str_safety))
 
-            fil_batch.write("\nCD .." + "\n")
+            # Back out and clean up...
+            fil_batch.write("\n:: Back out and clean up...\n")
+            fil_batch.write("CD .." + "\n")
+            fil_batch.write("DEL /F /S /  {}\n".format(str_injob_work_dir))
+            fil_batch.write("RMDIR /S /Q {}\n".format(str_injob_work_dir))
 
             fil_batch.flush()
 
