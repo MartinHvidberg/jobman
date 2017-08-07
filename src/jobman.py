@@ -30,6 +30,7 @@ History
   ver 1.0.4 - introducing jobman_pilot.yaml as keypress seems to be difficult to handle
   ver 1.0.5 - Swapping a few lines in main, so it exits better after last job
   ver 1.0.6 - Updating all 'print' to 'print_and_log()' :-)
+  ver 1.0.7 - Bugfix - Only load 12, and then Idles?
 
 ToDo
     * When job pool is empty, wait for busy jobs to complete (seems to have been fixed?)
