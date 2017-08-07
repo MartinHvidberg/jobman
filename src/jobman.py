@@ -34,6 +34,7 @@ History
 
 ToDo
     * When job pool is empty, wait for busy jobs to complete (seems to have been fixed?)
+    * make more specifik error handeling in try: except: situations
     * Send .jmlog to L rather than t C/D
     * make 'hammer time' floating, to better ensure 100% cpu use
     * re-read config at intervals
@@ -49,11 +50,12 @@ ToDo
     * Change jobman.config to yaml format
 """
 
-__version__ = "1.0.6"
-__build__ = "2017-08-03ff"
+__version__ = "1.0.7"
+__build__ = "2017-08-07 1500"
 
 
 def print_and_log(str_message, level='Info'):
+    """ Write the same message to screen and to the logfile """
     print str_message
     if level.lower() == 'info':
         logging.info(str_message)
@@ -66,6 +68,7 @@ def print_and_log(str_message, level='Info'):
 
 
 def read_config_file(str_fn):
+    """ Read the specified config file, and make a dictionary version of it """
     dic_conf_l = dict()
     fil_conf = open(str_fn, "r")
     if fil_conf:
@@ -96,6 +99,7 @@ def read_pilot_file(str_fn, dic_conf_l):
 
 
 def check_write_access(str_dir):
+    """" Check that the program have Writing access to the specified (disc) location """
     str_test_dir_name = "delete_this_test_dir_if_it_exist_for_more_than_a_few_seconds"
     try:
         os.makedirs(str_dir + str_osep + str_test_dir_name)
@@ -107,6 +111,7 @@ def check_write_access(str_dir):
 
 
 def clear_dir(dirpath):
+    """ Clear the given directory, by completely removing it, and creating an empty dir, with the same name """
     if os.path.exists(dirpath):
         for filename in os.listdir(dirpath):
             filepath = os.path.join(dirpath, filename)
@@ -119,24 +124,17 @@ def clear_dir(dirpath):
 
 
 def handle_completed_processes(dic_p):
+    """" Walk through the dictionary of processes, check if any has completed, and then handles the completion process """
     lst_completed_processes = list() # list to collect them...
     for proc_key_i in dic_p.keys():
         dic_proc_i = dic_p[proc_key_i]
         proc = dic_proc_i['subpro']
         poll_n = proc.poll()
         if poll_n is not None:  # it's completed, i.e. stopped running
+            print_and_log("  $$ Stopping job number: {}, named: {}".format(proc_key_i, dic_proc_i['name']))
             # stop the timer
             dic_proc_i['tim_stop'] = datetime.datetime.now()
             dic_proc_i['tim_dura'] = str(dic_proc_i['tim_stop']-dic_proc_i['tim_start'])
-            # write a log file
-            fil_jmlog = open(dic_proc_i['workdir']+str_osep+dic_proc_i['name']+".jmlog","w")
-            for itms in sorted(dic_proc_i.keys()):
-                str_logline = "   $ {} : {}".format(itms, dic_proc_i[itms])
-                fil_jmlog.write(str_logline+"\n")
-                print_and_log(str_logline)
-            fil_jmlog.close()
-
-            # XXX Consider moving this block about 8 lines up, and include the include it in the logging ;-)
             # check for success
             if poll_n == 0:  # it has completed successfully
                 print_and_log("Proc comp. succ. {}".format(dic_proc_i['name']))
@@ -144,7 +142,18 @@ def handle_completed_processes(dic_p):
             else:  # it has completed with error
                 print_and_log("Proc comp. FAIL. {}".format(dic_proc_i['name']), "warning")
                 str_dest_dir = str_dir_d
-            # return all the files to /Master and clean up
+            # write a log file. (Have to run before mowing stuff back to master.)
+            try:
+                fil_jmlog = open(dic_proc_i['workdir']+str_osep+dic_proc_i['name']+".jmlog","w")
+            except IOError as e:
+                print_and_log("Error : Seems imposible to write log file. python says: {}".format(e))
+                sys.exit(995)
+            for itms in sorted(dic_proc_i.keys()):
+                str_logline = "   $ {} : {}".format(itms, dic_proc_i[itms])
+                fil_jmlog.write(str_logline+"\n")
+                print_and_log(str_logline)
+            fil_jmlog.close()
+            # return all the files from /Workdir to /Master and clean up
             try:
                 shutil.move(dic_proc_i['workdir'],str_dest_dir)
             except:
@@ -156,7 +165,6 @@ def handle_completed_processes(dic_p):
             except:
                 print_and_log("Error - Can't move Busy to Complete/Discarded: {} >> {}".format(str_dir_b+str_osep+dic_proc_i['name'],str_dest_dir), "error")
                 sys.exit(993)
-
             # Mark process to be removed
             lst_completed_processes.append(proc_key_i)
     for compproc in lst_completed_processes:
@@ -180,13 +188,13 @@ def saferun_subprocess(str_args, str_workwork_dir):
 
 
 def start_new_process(dic_p):
+    """ Adds a (one) new running process (job) to the dictionary of processes (dic_p) """
     lst_a = list()
-    for fil_a in os.listdir(str_dir_a):
+    for fil_a in os.listdir(str_dir_a): # Global path to /Available directory
         lst_a.append(fil_a)
-    if len(lst_a) > 0:
-        # We have a job to do...
-        bol_more_left = True
-        str_job = random.choice(lst_a)
+    if len(lst_a) > 0: # We have a job to do...
+        bol_lif_more_left = True
+        str_job = random.choice(lst_a) # random pick amongst available jobs, to minimize risk of collision
         print_and_log("I picked job: {}".format(str_job))
         # Secure the file, so nobody else grabs it
         try:
@@ -194,7 +202,7 @@ def start_new_process(dic_p):
         except:
             print_and_log("... but I wasn't fast enough.")
             str_job = None  # If unsuccessful the file may have been snatch by another worker, milli-seconds before us.
-            return bol_more_left, dic_p
+            return bol_lif_more_left, dic_p # bail out here, and wait to be called again, by the outer loop
         # make and fill work-dir in work-dir
         str_shortname = str_job.split(".", 1)[0]  # i.e. loose the file extension
         str_work_dir = dic_conf['myworkdir']
@@ -206,7 +214,7 @@ def start_new_process(dic_p):
             print_and_log("Error - Can't copy job file: {} Busy: {} Workdir: {}".format(str_job, str_dir_d, str_workwork_dir), "error")
             sys.exit(996)
         # Run...
-        if str_job:
+        if str_job: # XXX this is not super smooth, look for a more logically clean solution
             str_args = str_workwork_dir + str_osep + str_job
             safe_proc = saferun_subprocess(str_args, str_workwork_dir)
             if safe_proc:
@@ -221,8 +229,8 @@ def start_new_process(dic_p):
                 dic_job['worker_comp'] = str_worker_comp
                 dic_p[str_shortname] = dic_job  # add the new job to the pool
     else:
-        bol_more_left = False
-    return bol_more_left, dic_p
+        bol_lif_more_left = False
+    return bol_lif_more_left, dic_p
 
 
 if __name__ == "__main__":
@@ -251,11 +259,10 @@ if __name__ == "__main__":
         exit(993)
 
     # Read the .config file
-    str_config_fn = jm_config_file
-    dic_conf = read_config_file(str_config_fn)
-    print_and_log(" + Read config file: {}".format(str_config_fn), "info")
+    dic_conf = read_config_file(jm_config_file)
+    print_and_log(" + Read config file: {}".format(jm_config_file), "info")
 
-    # Note workers name and computer
+    # Note workers-name and computer
     if 'name' in dic_conf.keys():
         str_worker_name = dic_conf['name']
     else:
@@ -311,13 +318,14 @@ if __name__ == "__main__":
     print_and_log(" + Master dir found: {}".format(str_master_dir), "info")
 
     # Assume one process at the time, if not set otherwise in .config file
+    num_max_pr = 1 # Default is 1
     if 'max_threads' in dic_conf.keys():
         try:
             num_max_pr = int(dic_conf['max_threads'])
         except ValueError:
-            num_max_pr = 1
+            print_and_log("Warning - .config file holds non integer value for 'max_threads'", "waning")
     else:
-        num_max_pr = 1
+        print_and_log("Warning - .config file don't specify a max_threads", "waning")
     print_and_log(" + Prepared max threads: {}".format(num_max_pr), "info")
 
     # Minimum time to wait between checking for a vacant process slot
@@ -327,10 +335,8 @@ if __name__ == "__main__":
             num_htime = int(dic_conf['hammertime'])
         except ValueError:
             print_and_log("Warning - .config file holds non integer value for 'hammertime'", "waning")
-            # fall back on default value above...
     else:
         print_and_log("Warning - .config file don't specify a hammertime", "waning")
-            # fall back on default value above...
     print_and_log(" + Hammer time set to: {} seconds".format(num_htime), "info")
 
     # All is Green - We are Good-to-go...
@@ -339,26 +345,32 @@ if __name__ == "__main__":
     # Start running processes
     bol_more_left = True  # Just assume that /Available is non-empty, we will check later.
     dic_pro = dict()  # Dictionary holding the process-objects
-    jm_quit = False  # If this becomes True JobMan will finish current jobs and then quit
+    jm_quit = False  # If this becomes True JobMan will finish current job(s) and then quit
 
-    while bol_more_left or len(dic_pro)>0:  # more left or more busy
+    while ((bol_more_left and not jm_quit) or len(dic_pro)>0):  # more left or more busy
 
         # Check on running jobs
-        dic_pro = handle_completed_processes(dic_pro)
         while len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
             print_and_log("All processes running: {} of {}. JobMan sleeping for {} seconds".format(len(dic_pro), num_max_pr, num_htime))
             time.sleep(num_htime)  # in seconds...
+            dic_pro = handle_completed_processes(dic_pro)
+
+            # Look for keypressed, and write status, and maybe handle different keypress?
+            # Alternative to keypress - scan a pilot-file.
+            jm_quit, dic_conf = read_pilot_file(jm_pilot_file, dic_conf)
 
         # Start up new jobs
         if bol_more_left and not jm_quit:
             # Start a new thread.
             print_and_log("Not all processes are running: {} of {}. Trying to start new...".format(len(dic_pro), num_max_pr))
             bol_more_left, dic_pro = start_new_process(dic_pro)
-        ##if len(dic_pro)>0:  # Still more busy - XXX this may not be needed after bol_more_busy was replaced by len(dic_pro)>0
-        ##    dic_pro = handle_completed_processes(dic_pro)  # Nessisary to process last jobs, after pool is empty
-
-        # Look for keypressed, and write status, and maybe handle different keypress?
-        # Alternative to keypress - scan a pilot-file.
-        jm_quit, dic_conf = read_pilot_file(jm_pilot_file, dic_conf)
 
     print_and_log("\nJobMan complete...", "info")
+
+print "\nScript completed... ver.{} build.{}".format(__version__, __build__)
+
+## *** End of Script ***
+
+## Music that accompanied the coding of this script:
+##   C.F.E. Hornemann - String Quartet No. 2 in D major
+##   Manfred Mann - Angle Station
