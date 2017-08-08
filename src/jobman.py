@@ -351,18 +351,18 @@ if __name__ == "__main__":
         ##print "@ {} ### more left:{}, jm quit:{}, dic length:{}".format(datetime.datetime.now(), bol_more_left, jm_quit, len(dic_pro))
 
         # Check on running jobs
-        if len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
+        dic_pro = handle_completed_processes(dic_pro) # Also clean up when we are not maxed out on proceses.
+        while len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
             print_and_log("All processes running: {} of {}. JobMan sleeping for {} seconds".format(len(dic_pro), num_max_pr, num_htime))
             time.sleep(num_htime)  # in seconds...
-
-        dic_pro = handle_completed_processes(dic_pro)
+            dic_pro = handle_completed_processes(dic_pro)
 
         # Look for keypressed, and write status, and maybe handle different keypress?
         # Alternative to keypress - scan a pilot-file.
         jm_quit, dic_conf = read_pilot_file(jm_pilot_file, dic_conf)
 
         # Start up new jobs
-        if bol_more_left and not jm_quit:
+        if (not jm_quit) and (len(dic_pro) < num_max_pr) and bol_more_left:
             # Start a new thread.
             print_and_log("Not all processes are running: {} of {}. Trying to start new...".format(len(dic_pro), num_max_pr))
             bol_more_left, dic_pro = start_new_process(dic_pro)

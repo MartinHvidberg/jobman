@@ -233,7 +233,7 @@ if __name__=="__main__":
 
     num_shot_length = 2000 # SeptiView shoots 2km
     str_fn_cell_list_1km = "cell_list_1km.txt" # "cell_samp_1km.txt", "cell_list_1km.txt"
-    str_main_workdir = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_udsi_master\Pause"  # Where the job-files go
+    str_main_workdir = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_udsi_master\Available"  # Where the job-files go
     str_safety = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_udsi_master\Results_copy" # A hardcoded place where important results are copied for safe keeping
 
     # open log file
