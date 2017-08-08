@@ -80,13 +80,13 @@ def read_config_file(str_fn):
 
 
 def read_pilot_file(str_fn, dic_conf_l):
-    jm_quit_l = False  # Default quit to False, for smooth except return
+    bol_pilot_say_go_l = True  # Default is True, for smooth except return
     with open(str_fn, 'r') as fil:
         try:
             dic_conf_n = yaml.load(fil)
         except yaml.YAMLError as exc:
             print(exc)
-            return jm_quit_l, dic_conf_l  # return most harmless
+            return bol_pilot_say_go_l, dic_conf_l  # return most harmless
     if 'c' in dic_conf_n.keys():  # Re-read Config file
         if dic_conf_n['c'] is True:
             dic_conf_c = read_config_file(jm_config_file)
@@ -94,8 +94,8 @@ def read_pilot_file(str_fn, dic_conf_l):
                 dic_conf_l[k] = dic_conf_c[k]
     if 'q' in dic_conf_n.keys():  # Quit JobMan
         if dic_conf_n['q'] is True:
-            jm_quit_l = True
-    return jm_quit_l, dic_conf_l
+            bol_pilot_say_go_l = False
+    return bol_pilot_say_go_l, dic_conf_l
 
 
 def check_write_access(str_dir):
@@ -343,12 +343,12 @@ if __name__ == "__main__":
     print_and_log("All is Green - We are Good-to-go...\n", "info")
 
     # Start running processes
-    bol_more_left = True  # Just assume that /Available is non-empty, we will check later.
+    bol_more_in_que = True  # Just assume that /Available is non-empty, we will check later.
     dic_pro = dict()  # Dictionary holding the process-objects
-    jm_quit = False  # If this becomes True JobMan will finish current job(s) and then quit
+    bol_pilot_say_go = True  # If this becomes True JobMan will finish current job(s) and then quit
 
-    while ((bol_more_left and not jm_quit) or len(dic_pro)>0):  # more left or more busy
-        ##print "@ {} ### more left:{}, jm quit:{}, dic length:{}".format(datetime.datetime.now(), bol_more_left, jm_quit, len(dic_pro))
+    while ((bol_more_in_que and bol_pilot_say_go) or bol_jobs_in_process):  # more left or more busy
+        ##print "@ {} ### more left:{}, jm quit:{}, dic length:{}".format(datetime.datetime.now(), bol_more_in_que, bol_pilot_say_go, len(dic_pro))
 
         # Check on running jobs
         dic_pro = handle_completed_processes(dic_pro) # Also clean up when we are not maxed out on proceses.
@@ -359,13 +359,13 @@ if __name__ == "__main__":
 
         # Look for keypressed, and write status, and maybe handle different keypress?
         # Alternative to keypress - scan a pilot-file.
-        jm_quit, dic_conf = read_pilot_file(jm_pilot_file, dic_conf)
+        bol_pilot_say_go, dic_conf = read_pilot_file(jm_pilot_file, dic_conf)
 
         # Start up new jobs
-        if (not jm_quit) and (len(dic_pro) < num_max_pr) and bol_more_left:
+        if bol_pilot_say_go and (len(dic_pro) < num_max_pr) and bol_more_in_que:
             # Start a new thread.
             print_and_log("Not all processes are running: {} of {}. Trying to start new...".format(len(dic_pro), num_max_pr))
-            bol_more_left, dic_pro = start_new_process(dic_pro)
+            bol_more_in_que, dic_pro = start_new_process(dic_pro)
 
     print_and_log("\nJobMan complete...", "info")
 
