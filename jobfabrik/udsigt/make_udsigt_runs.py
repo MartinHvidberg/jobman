@@ -251,5 +251,11 @@ if __name__=="__main__":
     log("All good to go...",20)
     build_all_jobs(lst_all_cells, str_main_workdir)
 
-    log("Python script {} completed sucessfuly...".format(sys.argv[0]), 20)
+    log("\nPython script {} completed sucessfuly...".format(sys.argv[0]), 20)
 
+
+
+## *** End of Script ***
+
+## Music that accompanied the coding of this script:
+##

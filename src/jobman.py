@@ -51,7 +51,7 @@ ToDo
 """
 
 __version__ = "1.0.7"
-__build__ = "2017-08-07 1500"
+__build__ = "2017-08-08 1000"
 
 
 def print_and_log(str_message, level='Info'):
@@ -348,16 +348,18 @@ if __name__ == "__main__":
     jm_quit = False  # If this becomes True JobMan will finish current job(s) and then quit
 
     while ((bol_more_left and not jm_quit) or len(dic_pro)>0):  # more left or more busy
+        print "@ {} ### more left:{}, jm quit:{}, dic length:{}".format(bol_more_left, jm_quit, len(dic_pro), datetime.datetime.now())
 
         # Check on running jobs
-        while len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
+        if len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
             print_and_log("All processes running: {} of {}. JobMan sleeping for {} seconds".format(len(dic_pro), num_max_pr, num_htime))
             time.sleep(num_htime)  # in seconds...
-            dic_pro = handle_completed_processes(dic_pro)
 
-            # Look for keypressed, and write status, and maybe handle different keypress?
-            # Alternative to keypress - scan a pilot-file.
-            jm_quit, dic_conf = read_pilot_file(jm_pilot_file, dic_conf)
+        dic_pro = handle_completed_processes(dic_pro)
+
+        # Look for keypressed, and write status, and maybe handle different keypress?
+        # Alternative to keypress - scan a pilot-file.
+        jm_quit, dic_conf = read_pilot_file(jm_pilot_file, dic_conf)
 
         # Start up new jobs
         if bol_more_left and not jm_quit:
@@ -374,3 +376,4 @@ print "\nScript completed... ver.{} build.{}".format(__version__, __build__)
 ## Music that accompanied the coding of this script:
 ##   C.F.E. Hornemann - String Quartet No. 2 in D major
 ##   Manfred Mann - Angle Station
+##   Spandau Ballet - Gold
