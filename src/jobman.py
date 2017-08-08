@@ -51,12 +51,12 @@ ToDo
 """
 
 __version__ = "1.0.7"
-__build__ = "2017-08-08 1000"
+__build__ = "2017-08-08 1004"
 
 
 def print_and_log(str_message, level='Info'):
     """ Write the same message to screen and to the logfile """
-    print str_message
+    print "<J> {}".format(str_message)
     if level.lower() == 'info':
         logging.info(str_message)
     elif level.lower() == 'warning':
@@ -64,7 +64,7 @@ def print_and_log(str_message, level='Info'):
     elif level.lower() == 'debug':
         logging.debug(str_message)
     else:
-        print "Error - print_and_log() encountered unknown error level: {}".format(level)
+        print "<J> Error - print_and_log() encountered unknown error level: {}".format(level)
 
 
 def read_config_file(str_fn):
@@ -348,7 +348,7 @@ if __name__ == "__main__":
     jm_quit = False  # If this becomes True JobMan will finish current job(s) and then quit
 
     while ((bol_more_left and not jm_quit) or len(dic_pro)>0):  # more left or more busy
-        print "@ {} ### more left:{}, jm quit:{}, dic length:{}".format(bol_more_left, jm_quit, len(dic_pro), datetime.datetime.now())
+        ##print "@ {} ### more left:{}, jm quit:{}, dic length:{}".format(datetime.datetime.now(), bol_more_left, jm_quit, len(dic_pro))
 
         # Check on running jobs
         if len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
@@ -369,11 +369,11 @@ if __name__ == "__main__":
 
     print_and_log("\nJobMan complete...", "info")
 
-print "\nScript completed... ver.{} build.{}".format(__version__, __build__)
+print "\nScript completed... {} ver.{} build.{}".format(os.path.basename(__file__), __version__, __build__)
 
 ## *** End of Script ***
 
 ## Music that accompanied the coding of this script:
 ##   C.F.E. Hornemann - String Quartet No. 2 in D major
 ##   Manfred Mann - Angle Station
-##   Spandau Ballet - Gold
+##   City Boy - The day the Earth caught fire
