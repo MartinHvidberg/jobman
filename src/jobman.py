@@ -137,7 +137,7 @@ def handle_completed_processes(dic_p):
             dic_proc_i['tim_dura'] = str(dic_proc_i['tim_stop']-dic_proc_i['tim_start'])
             # check for success
             if poll_n == 0:  # it has completed successfully
-                print_and_log("Proc comp. succ. {}".format(dic_proc_i['name']))
+                print_and_log("   $ Proc comp. succ. {}".format(dic_proc_i['name']))
                 str_dest_dir = str_dir_c
             else:  # it has completed with error
                 print_and_log("Proc comp. FAIL. {}".format(dic_proc_i['name']), "warning")
