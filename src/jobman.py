@@ -34,9 +34,10 @@ History
 
 ToDo
     * When job pool is empty, wait for busy jobs to complete (seems to have been fixed?)
-    * make more specifik error handeling in try: except: situations
+    * make more specific error handeling in try: except: situations
     * Send .jmlog to L rather than t C/D
     * make 'hammer time' floating, to better ensure 100% cpu use
+    * make statistics, to guide floting (auto) 'hammer time'
     * re-read config at intervals
     * have jobman react to keypress, e.g. - Seems to be difficult in Python
         h  = Help "display list of keypress options, and continue"
@@ -366,6 +367,8 @@ if __name__ == "__main__":
             # Start a new thread.
             print_and_log("Not all processes are running: {} of {}. Trying to start new...".format(len(dic_pro), num_max_pr))
             bol_more_in_que, dic_pro = start_new_process(dic_pro)
+
+        time.sleep(num_htime)  # in seconds...
 
     print_and_log("\nJobMan complete...", "info")
 
