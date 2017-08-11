@@ -8,7 +8,7 @@ import random
 import datetime
 import time
 import subprocess
-import yaml
+##import yaml  # Get rid of YALM, it's not in standart python installs
 # import from 3'rd party
 # import home grown...
 
@@ -31,9 +31,11 @@ History
   ver 1.0.5 - Swapping a few lines in main, so it exits better after last job
   ver 1.0.6 - Updating all 'print' to 'print_and_log()' :-)
   ver 1.0.7 - Bugfix - Only load 12, and then Idles?
+  ver 1.0.8 - Kill YAML, and comment out 'pilot' that uses YAML
 
 ToDo
     * When job pool is empty, wait for busy jobs to complete (seems to have been fixed?)
+    * introduce que-prioritising (high, normal, low priority jobs? or numbers?)
     * make more specific error handeling in try: except: situations
     * Send .jmlog to L rather than t C/D
     * make 'hammer time' floating, to better ensure 100% cpu use
@@ -51,8 +53,8 @@ ToDo
     * Change jobman.config to yaml format
 """
 
-__version__ = "1.0.7"
-__build__ = "2017-08-08 1004"
+__version__ = "1.0.8"
+__build__ = "2017-08-11 1500"
 
 
 def print_and_log(str_message, level='Info'):
@@ -80,23 +82,23 @@ def read_config_file(str_fn):
     return dic_conf_l
 
 
-def read_pilot_file(str_fn, dic_conf_l):
-    bol_pilot_say_go_l = True  # Default is True, for smooth except return
-    with open(str_fn, 'r') as fil:
-        try:
-            dic_conf_n = yaml.load(fil)
-        except yaml.YAMLError as exc:
-            print(exc)
-            return bol_pilot_say_go_l, dic_conf_l  # return most harmless
-    if 'c' in dic_conf_n.keys():  # Re-read Config file
-        if dic_conf_n['c'] is True:
-            dic_conf_c = read_config_file(jm_config_file)
-            for k in dic_conf_c.keys():  # only replace keys found in file
-                dic_conf_l[k] = dic_conf_c[k]
-    if 'q' in dic_conf_n.keys():  # Quit JobMan
-        if dic_conf_n['q'] is True:
-            bol_pilot_say_go_l = False
-    return bol_pilot_say_go_l, dic_conf_l
+# def read_pilot_file(str_fn, dic_conf_l):
+#     bol_pilot_say_go_l = True  # Default is True, for smooth except return
+#     with open(str_fn, 'r') as fil:
+#         try:
+#             dic_conf_n = yaml.load(fil)
+#         except yaml.YAMLError as exc:
+#             print(exc)
+#             return bol_pilot_say_go_l, dic_conf_l  # return most harmless
+#     if 'c' in dic_conf_n.keys():  # Re-read Config file
+#         if dic_conf_n['c'] is True:
+#             dic_conf_c = read_config_file(jm_config_file)
+#             for k in dic_conf_c.keys():  # only replace keys found in file
+#                 dic_conf_l[k] = dic_conf_c[k]
+#     if 'q' in dic_conf_n.keys():  # Quit JobMan
+#         if dic_conf_n['q'] is True:
+#             bol_pilot_say_go_l = False
+#     return bol_pilot_say_go_l, dic_conf_l
 
 
 def check_write_access(str_dir):
@@ -360,7 +362,7 @@ if __name__ == "__main__":
 
         # Look for keypressed, and write status, and maybe handle different keypress?
         # Alternative to keypress - scan a pilot-file.
-        bol_pilot_say_go, dic_conf = read_pilot_file(jm_pilot_file, dic_conf)
+        ##bol_pilot_say_go, dic_conf = read_pilot_file(jm_pilot_file, dic_conf) <-- XXX Reintroduce without YAML
 
         # Start up new jobs
         if bol_pilot_say_go and (len(dic_pro) < num_max_pr) and bol_more_in_que:
