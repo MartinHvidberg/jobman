@@ -109,7 +109,7 @@ def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
             fil_batch.write("\n:: extract 1km2 of Internal walls to a .shp file\n")
             str_intro = "ogr2ogr -overwrite "
             str_targt = "-f \"ESRI Shapefile\" {}_barrie.shp ".format(str_cell_name)
-            str_extnt = "-spat {} {} {} {} ".format(lst_cell_ext_only[0], lst_cell_ext_only[1], lst_cell_ext_only[2], lst_cell_ext_only[3])
+            str_extnt = "-spat {} {} {} {} ".format(lst_cell_ext_buff[0], lst_cell_ext_buff[1], lst_cell_ext_buff[2], lst_cell_ext_buff[3])
             str_sourc = "PG:\"host=c1503681 port=5433 user=reader dbname=pgv_2017 password=hejskat\" "
             str_where = "-sql \"SELECT z, geom FROM temp_jonyp.pgv_barriere\""
             fil_batch.write(str_intro + str_targt + str_extnt + str_sourc + str_where+"\n")
