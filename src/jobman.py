@@ -331,12 +331,12 @@ if __name__ == "__main__":
 
     while ((bol_more_in_que and bol_pilot_say_go) or bol_jobs_in_process):  # loop if more left or more busy
 
-        print_and_log("Loop: {} / {}. Wait {}. qu:{} pi:{} pr:{}".format(len(dic_pro), num_max_pr, num_htime, bol_more_in_que, bol_pilot_say_go, bol_jobs_in_process))
+        print_and_log("Running: {} / {}. Wait {}. [qu {}, pi {}, pr {}]".format(len(dic_pro), num_max_pr, num_htime, bol_more_in_que, bol_pilot_say_go, bol_jobs_in_process))
 
         # Check on running jobs
         dic_pro = handle_completed_processes(dic_pro)
         if len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
-            print_and_log("All processes running: {} of {}. JobMan sleeping for {} seconds")
+            print_and_log("All processes running: {} of {}. JobMan sleeping for {} seconds").format(len(dic_pro), num_max_pr, num_htime)
             time.sleep(num_htime)  # in seconds...
 
         # Update Pilot_says_go, and other config things ...
@@ -358,7 +358,6 @@ if __name__ == "__main__":
             print_and_log("Not all processes are running: {} of {}. Trying to start new...".format(len(dic_pro), num_max_pr))
             bol_more_in_que, dic_pro = start_new_process(dic_pro)
         else:
-            print_and_log("Que is empty or pilot says stop, but jobs are still running: {} of {}. JobMan sleeping for {} seconds")
             time.sleep(num_htime)  # in seconds...
 
         # update Jobs_in_process
