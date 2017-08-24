@@ -32,15 +32,14 @@ History
   ver 1.0.6 - Updating all 'print' to 'print_and_log()' :-)
   ver 1.0.7 - Bugfix - Only load 12, and then Idles?
   ver 1.0.8 - Kill YAML, and comment out 'pilot' that uses YAML
+  ver 1.0.9 - Fixing some errors in major loop, now cleans up and shuts down nicely - again
 
 ToDo
-    * When job pool is empty, wait for busy jobs to complete (seems to have been fixed?)
     * introduce que-prioritising (high, normal, low priority jobs? or numbers?)
     * make more specific error handeling in try: except: situations
     * Send .jmlog to L rather than t C/D
     * make 'hammer time' floating, to better ensure 100% cpu use
     * make statistics, to guide floting (auto) 'hammer time'
-    * re-read config at intervals
     * have jobman react to keypress, e.g. - Seems to be difficult in Python
         h  = Help "display list of keypress options, and continue"
         v  = Version "type JobMan version, and continue"
@@ -50,11 +49,10 @@ ToDo
         -  = decrease "-1 on number of processes"
         q' = Quit "don't take new jobs, and stop when done"
         (') meanwhile substituted by the jobman_pilot.yaml
-    * Change jobman.config to yaml format
 """
 
-__version__ = "1.0.8"
-__build__ = "2017-08-11 1500"
+__version__ = "1.0.9"
+__build__ = "2017-08-24 1300"
 
 
 def print_and_log(str_message, level='Info'):
@@ -80,25 +78,6 @@ def read_config_file(str_fn):
             if len(lst_keyval) == 2:
                 dic_conf_l[lst_keyval[0].lower()] = lst_keyval[1]
     return dic_conf_l
-
-
-# def read_pilot_file(str_fn, dic_conf_l):
-#     bol_pilot_say_go_l = True  # Default is True, for smooth except return
-#     with open(str_fn, 'r') as fil:
-#         try:
-#             dic_conf_n = yaml.load(fil)
-#         except yaml.YAMLError as exc:
-#             print(exc)
-#             return bol_pilot_say_go_l, dic_conf_l  # return most harmless
-#     if 'c' in dic_conf_n.keys():  # Re-read Config file
-#         if dic_conf_n['c'] is True:
-#             dic_conf_c = read_config_file(jm_config_file)
-#             for k in dic_conf_c.keys():  # only replace keys found in file
-#                 dic_conf_l[k] = dic_conf_c[k]
-#     if 'q' in dic_conf_n.keys():  # Quit JobMan
-#         if dic_conf_n['q'] is True:
-#             bol_pilot_say_go_l = False
-#     return bol_pilot_say_go_l, dic_conf_l
 
 
 def check_write_access(str_dir):
@@ -241,7 +220,6 @@ if __name__ == "__main__":
     # Hardcoded parameters - could potentially be command line input
     jm_session_log = "jobman.sessionlog"
     jm_config_file = "jobman.config"
-    jm_pilot_file = "jobman_pilot.yaml"
 
     # Open a session log file
     logging.basicConfig(filename=jm_session_log, level=logging.DEBUG)
@@ -357,9 +335,18 @@ if __name__ == "__main__":
         while len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
             print_and_log("All processes running: {} of {}. JobMan sleeping for {} seconds".format(len(dic_pro), num_max_pr, num_htime))
             time.sleep(num_htime)  # in seconds...
-            ##dic_pro = handle_completed_processes(dic_pro)
 
-        # Update Pilot_says_go
+        # Update Pilot_says_go, and other config things ...
+        dic_conf = read_config_file(jm_config_file)
+        bol_pilot_say_go = dic_conf['pilotsaygo'].lower() == 'true'
+        try:
+            num_htime = int(dic_conf['hammertime'])
+        except:
+            pass # if .config file is non-sense, just keep former value
+        try:
+            num_max_pr = int(dic_conf['max_threads'])
+        except:
+            pass # if .config file is non-sense, just keep former value
 
         # Start up new jobs
         if bol_pilot_say_go and (len(dic_pro) < num_max_pr) and bol_more_in_que:
@@ -368,8 +355,7 @@ if __name__ == "__main__":
             bol_more_in_que, dic_pro = start_new_process(dic_pro)
 
         # update Jobs_in_process
-
-        ##time.sleep(num_htime)  # in seconds...
+        bol_jobs_in_process = len(dic_pro) < 1
 
     print_and_log("\nJobMan complete...", "info")
 
