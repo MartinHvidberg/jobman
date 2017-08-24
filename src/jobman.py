@@ -331,15 +331,16 @@ if __name__ == "__main__":
 
     while ((bol_more_in_que and bol_pilot_say_go) or bol_jobs_in_process):  # loop if more left or more busy
 
-        ##print_and_log("Loop: {} of {} running. Hammertime {} seconds // db:{}:{}:{}".format(len(dic_pro), num_max_pr, num_htime, bol_more_in_que, bol_pilot_say_go, bol_jobs_in_process))
+        print_and_log("Loop: {} / {}. Wait {}. qu{} pi{} pr{}".format(len(dic_pro), num_max_pr, num_htime, bol_more_in_que, bol_pilot_say_go, bol_jobs_in_process))
 
         # Check on running jobs
-        dic_pro = handle_completed_processes(dic_pro) # Also clean up when we are not maxed out on proceses.
+        dic_pro = handle_completed_processes(dic_pro)
         if len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
-            print_and_log("All processes running: {} of {}. JobMan sleeping for {} seconds // db:{}:{}:{}".format(len(dic_pro), num_max_pr, num_htime, bol_more_in_que, bol_pilot_say_go, bol_jobs_in_process))
+            print_and_log("All processes running: {} of {}. JobMan sleeping for {} seconds")
             time.sleep(num_htime)  # in seconds...
 
         # Update Pilot_says_go, and other config things ...
+        print_and_log("Checking .config file...")
         dic_conf = read_config_file(jm_config_file)
         bol_pilot_say_go = dic_conf['pilotsaygo'].lower() == 'true'
         try:
