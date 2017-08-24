@@ -357,7 +357,9 @@ if __name__ == "__main__":
         while len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
             print_and_log("All processes running: {} of {}. JobMan sleeping for {} seconds".format(len(dic_pro), num_max_pr, num_htime))
             time.sleep(num_htime)  # in seconds...
-            dic_pro = handle_completed_processes(dic_pro)
+            ##dic_pro = handle_completed_processes(dic_pro)
+
+        # Update Pilot_says_go
 
         # Start up new jobs
         if bol_pilot_say_go and (len(dic_pro) < num_max_pr) and bol_more_in_que:
@@ -365,7 +367,9 @@ if __name__ == "__main__":
             print_and_log("Not all processes are running: {} of {}. Trying to start new...".format(len(dic_pro), num_max_pr))
             bol_more_in_que, dic_pro = start_new_process(dic_pro)
 
-        time.sleep(num_htime)  # in seconds...
+        # update Jobs_in_process
+
+        ##time.sleep(num_htime)  # in seconds...
 
     print_and_log("\nJobMan complete...", "info")
 
