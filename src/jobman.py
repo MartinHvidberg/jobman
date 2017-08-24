@@ -325,10 +325,11 @@ if __name__ == "__main__":
 
     # Start running processes
     bol_more_in_que = True  # Just assume that /Available is non-empty, we will check later.
-    dic_pro = dict()  # Dictionary holding the process-objects
     bol_pilot_say_go = True  # If this becomes True JobMan will finish current job(s) and then quit
+    bol_jobs_in_process = False # We haven't started any processes, yet.
+    dic_pro = dict()  # Dictionary holding the process-objects
 
-    while ((bol_more_in_que and bol_pilot_say_go) or bol_jobs_in_process):  # more left or more busy
+    while ((bol_more_in_que and bol_pilot_say_go) or bol_jobs_in_process):  # loop if more left or more busy
 
         # Check on running jobs
         dic_pro = handle_completed_processes(dic_pro) # Also clean up when we are not maxed out on proceses.
