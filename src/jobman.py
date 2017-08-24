@@ -8,7 +8,6 @@ import random
 import datetime
 import time
 import subprocess
-##import yaml  # Get rid of YALM, it's not in standart python installs
 # import from 3'rd party
 # import home grown...
 
@@ -33,6 +32,7 @@ History
   ver 1.0.7 - Bugfix - Only load 12, and then Idles?
   ver 1.0.8 - Kill YAML, and comment out 'pilot' that uses YAML
   ver 1.0.9 - Fixing some errors in major loop, now cleans up and shuts down nicely - again
+                  and cleaning out yaml, moving everything to .config file
 
 ToDo
     * introduce que-prioritising (high, normal, low priority jobs? or numbers?)
