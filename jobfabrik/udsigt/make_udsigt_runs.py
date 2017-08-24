@@ -145,10 +145,10 @@ def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
             del str_intro, str_targt, str_extnt, str_sourc, str_where
 
             # run a septi_view on general view, and bring the results to safety
-            # call ..\..\..\Executables\septima_view_v0.0.3.exe general --idatt dar_id --zatt z --walls 1km_6158_703_barrie.shp --wallzatt z a:\pgv_k_udsigtshoejdemodel.vrt 1km_6158_703_udgobj.shp 1km_6158_703_gen.csv
+            # call ..\..\..\Executables\septima_view_v0.0.4.exe general --idatt dar_id --zatt z --walls 1km_6158_703_barrie.shp --wallzatt z a:\pgv_k_udsigtshoejdemodel.vrt 1km_6158_703_udgobj.shp 1km_6158_703_gen.csv
 
             fil_batch.write("\n:: run a septi_view on general view\n")
-            str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe general "
+            str_exefil = "call ..\..\..\Executables\septima_view_v0.0.4.exe general "
             str_attrib = "--idatt dar_id --zatt z --walls {}_barrie.shp --wallzatt z ".format(str_cell_name)
             str_demdsm = r"a:\pgv_k_udsigtshoejdemodel.vrt "
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
@@ -161,7 +161,7 @@ def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
 
             # run a septi_view on sea view, and bring the results to safety
             fil_batch.write("\n:: run a septi_view on sea view\n")
-            str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe sea "
+            str_exefil = "call ..\..\..\Executables\septima_view_v0.0.4.exe sea "
             str_attrib = "--idatt dar_id --zatt z --walls {}_barrie.shp --wallzatt z ".format(str_cell_name)
             str_demdsm = r"a:\pgv_k_udsigtshoejdemodel.vrt "
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)
@@ -175,7 +175,7 @@ def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
 
             # run a septi_view on lake view, and bring the results to safety
             fil_batch.write("\n:: run a septi_view on lake view\n")
-            str_exefil = "call ..\..\..\Executables\septima_view_v0.0.3.exe sea "
+            str_exefil = "call ..\..\..\Executables\septima_view_v0.0.4.exe sea "
             str_attrib = "--idatt dar_id --zatt z --walls {}_barrie.shp --wallzatt z ".format(str_cell_name)
             str_demdsm = r"a:\pgv_k_udsigtshoejdemodel.vrt "
             str_udgobj = "{}_udgobj.shp ".format(str_cell_name)

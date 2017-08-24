@@ -52,7 +52,7 @@ ToDo
 """
 
 __version__ = "1.0.9"
-__build__ = "2017-08-24 1300"
+__build__ = "2017-08-24 1336"
 
 
 def print_and_log(str_message, level='Info'):
@@ -223,7 +223,7 @@ if __name__ == "__main__":
 
     # Open a session log file
     logging.basicConfig(filename=jm_session_log, level=logging.DEBUG)
-    print_and_log("JobMan ver.{} - starting logfile...\n".format(__version__), "info")
+    print_and_log("JobMan ver.{} build. {} - starting logfile...\n".format(__version__, __build__), "info")
 
     # Check if we are on windows or Linux
     if os.name.lower() in ('unix', 'posix'):
@@ -331,10 +331,12 @@ if __name__ == "__main__":
 
     while ((bol_more_in_que and bol_pilot_say_go) or bol_jobs_in_process):  # loop if more left or more busy
 
+        ##print_and_log("Loop: {} of {} running. Hammertime {} seconds // db:{}:{}:{}".format(len(dic_pro), num_max_pr, num_htime, bol_more_in_que, bol_pilot_say_go, bol_jobs_in_process))
+
         # Check on running jobs
         dic_pro = handle_completed_processes(dic_pro) # Also clean up when we are not maxed out on proceses.
-        while len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
-            print_and_log("All processes running: {} of {}. JobMan sleeping for {} seconds".format(len(dic_pro), num_max_pr, num_htime))
+        if len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
+            print_and_log("All processes running: {} of {}. JobMan sleeping for {} seconds // db:{}:{}:{}".format(len(dic_pro), num_max_pr, num_htime, bol_more_in_que, bol_pilot_say_go, bol_jobs_in_process))
             time.sleep(num_htime)  # in seconds...
 
         # Update Pilot_says_go, and other config things ...
