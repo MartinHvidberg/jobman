@@ -30,7 +30,7 @@ From a list of ID's of all relevant 1km cell names...
 # ver 0.1 works with 'enkeltbolig'
 # ver 0.2 works with 'flerbolig' including barriers
 
-__version__ = "$ 0.2 build 20170804 $"
+__version__ = "$ 0.2 build 20170824 $"
 
 def log(str_text,level,file=""):
     """ CRITICAL 50, ERROR 40, WARNING 30, INFO 20, DEBUG 10, NOTSET 0 """
@@ -99,10 +99,10 @@ def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
             fil_batch.write("\n:: extract 1km2 of UdgangsObj for Udsigt to .shp file\n")
             str_intro = "ogr2ogr -overwrite "
             str_targt = "-f \"ESRI Shapefile\" {}_udgobj.shp ".format(str_cell_name)
-            str_extnt = "-spat {} {} {} {} ".format(lst_cell_ext_only[0], lst_cell_ext_only[1], lst_cell_ext_only[2], lst_cell_ext_only[3])
+            # str_extnt = "-spat {} {} {} {} ".format(lst_cell_ext_only[0], lst_cell_ext_only[1], lst_cell_ext_only[2], lst_cell_ext_only[3])  # -spat seems unstabl close to cell border.
             str_sourc = "PG:\"host=c1503681 port=5433 user=reader dbname=pgv_2017 password=hejskat\" "
-            str_where = "-sql \"SELECT dar_id, udsigts_hoejde as z, geom FROM temp_jonyp.opgangcentroider_m_hoejde\""
-            fil_batch.write(str_intro + str_targt + str_extnt + str_sourc + str_where+"\n")
+            str_where = "-sql \"SELECT dar_id, udsigts_hoejde as z, geom FROM temp_jonyp.opgangcentroider_m_hoejde_ny WHERE kn1kmdk = '{}'\"".format(str_cell_name)
+            fil_batch.write(str_intro + str_targt + str_sourc + str_where+"\n")
             del str_intro, str_targt, str_sourc, str_where
 
             # extract 1km2 + 2km buffer of Internal Walls to a .shp file
@@ -232,7 +232,7 @@ if __name__=="__main__":
     ##bol_run_septiview = True # Default = True, but should be False while testing on computers not running Septi_View.exe
 
     num_shot_length = 2000 # SeptiView shoots 2km
-    str_fn_cell_list_1km = "cell_stump_1km.txt" # "cell_samp_1km.txt", "cell_list_1km.txt"
+    str_fn_cell_list_1km = "cell_sjaellandsample_1km.txt" # "cell_samp_1km.txt", "cell_list_1km.txt"
     str_main_workdir = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_udsi_master\Available"  # Where the job-files go
     str_safety = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_udsi_master\Results_copy" # A hardcoded place where important results are copied for safe keeping
 

@@ -351,7 +351,6 @@ if __name__ == "__main__":
     bol_pilot_say_go = True  # If this becomes True JobMan will finish current job(s) and then quit
 
     while ((bol_more_in_que and bol_pilot_say_go) or bol_jobs_in_process):  # more left or more busy
-        ##print "@ {} ### more left:{}, jm quit:{}, dic length:{}".format(datetime.datetime.now(), bol_more_in_que, bol_pilot_say_go, len(dic_pro))
 
         # Check on running jobs
         dic_pro = handle_completed_processes(dic_pro) # Also clean up when we are not maxed out on proceses.
@@ -359,10 +358,6 @@ if __name__ == "__main__":
             print_and_log("All processes running: {} of {}. JobMan sleeping for {} seconds".format(len(dic_pro), num_max_pr, num_htime))
             time.sleep(num_htime)  # in seconds...
             dic_pro = handle_completed_processes(dic_pro)
-
-        # Look for keypressed, and write status, and maybe handle different keypress?
-        # Alternative to keypress - scan a pilot-file.
-        ##bol_pilot_say_go, dic_conf = read_pilot_file(jm_pilot_file, dic_conf) <-- XXX Reintroduce without YAML
 
         # Start up new jobs
         if bol_pilot_say_go and (len(dic_pro) < num_max_pr) and bol_more_in_que:
