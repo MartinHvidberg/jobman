@@ -357,6 +357,9 @@ if __name__ == "__main__":
             # Start a new thread.
             print_and_log("Not all processes are running: {} of {}. Trying to start new...".format(len(dic_pro), num_max_pr))
             bol_more_in_que, dic_pro = start_new_process(dic_pro)
+        else:
+            print_and_log("Que is empty or pilot says stop, but jobs are still running: {} of {}. JobMan sleeping for {} seconds")
+            time.sleep(num_htime)  # in seconds...
 
         # update Jobs_in_process
         bol_jobs_in_process = len(dic_pro) < 1
