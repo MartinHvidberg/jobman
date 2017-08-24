@@ -331,7 +331,7 @@ if __name__ == "__main__":
 
     while ((bol_more_in_que and bol_pilot_say_go) or bol_jobs_in_process):  # loop if more left or more busy
 
-        print_and_log("Loop: {} / {}. Wait {}. qu{} pi{} pr{}".format(len(dic_pro), num_max_pr, num_htime, bol_more_in_que, bol_pilot_say_go, bol_jobs_in_process))
+        print_and_log("Loop: {} / {}. Wait {}. qu:{} pi:{} pr:{}".format(len(dic_pro), num_max_pr, num_htime, bol_more_in_que, bol_pilot_say_go, bol_jobs_in_process))
 
         # Check on running jobs
         dic_pro = handle_completed_processes(dic_pro)
@@ -362,7 +362,7 @@ if __name__ == "__main__":
             time.sleep(num_htime)  # in seconds...
 
         # update Jobs_in_process
-        bol_jobs_in_process = len(dic_pro) < 1
+        bol_jobs_in_process = len(dic_pro) > 0
 
     print_and_log("\nJobMan complete...", "info")
 
