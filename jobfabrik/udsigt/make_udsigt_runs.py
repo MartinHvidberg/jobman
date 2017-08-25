@@ -60,7 +60,7 @@ def build_all_jobs(lst_all_cells_local, str_main_workdir_local):
 
     for str_cell_name in lst_all_cells_local:
         log("Running cell: {}".format(str_cell_name), 20)
-        
+
         # Open new .bat file
         str_batch_fn = str_main_workdir_local+"\\run_uds_"+str_cell_name+".bat"
         with open(str_batch_fn, "w") as fil_batch:
@@ -232,7 +232,7 @@ if __name__=="__main__":
     ##bol_run_septiview = True # Default = True, but should be False while testing on computers not running Septi_View.exe
 
     num_shot_length = 2000 # SeptiView shoots 2km
-    str_fn_cell_list_1km = "cell_sjaellandsample_1km.txt" # "cell_samp_1km.txt", "cell_list_1km.txt"
+    str_fn_cell_list_1km = "cell_sjaellandsamp_1km.txt" # "cell_samp_1km.txt", "cell_list_1km.txt"
     str_main_workdir = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_udsi_master\Available"  # Where the job-files go
     str_safety = r"F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_udsi_master\Results_copy" # A hardcoded place where important results are copied for safe keeping
 
@@ -246,7 +246,7 @@ if __name__=="__main__":
     except:
         log("ERROR - Can't open: List of cells: "+str(str_fn_cell_list_1km), 50)
         sys.exit(999)
-    
+
     # ** Begin build
     log("All good to go...",20)
     build_all_jobs(lst_all_cells, str_main_workdir)
