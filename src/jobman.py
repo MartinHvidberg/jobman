@@ -62,8 +62,6 @@ def print_and_log(str_message, level='Info'):
         logging.info(str_message)
     elif level.lower() == 'warning':
         logging.warning(str_message)
-    elif level.lower() == 'error':
-        logging.error(str_message)
     elif level.lower() == 'debug':
         logging.debug(str_message)
     else:
@@ -297,18 +295,6 @@ if __name__ == "__main__":
                 os.path.exists(str_dir_e),
                 os.path.exists(str_dir_l)]):
         print_and_log("Error - One or more of the expected directories A, B, C, D, E, and L are missing from {}".format(str_master_dir), "error")
-        if not os.path.exists(str_dir_a):
-            print "Can't find {}".format(str_dir_a)
-        if not os.path.exists(str_dir_b):
-            print "Can't find {}".format(str_dir_b)
-        if not os.path.exists(str_dir_c):
-            print "Can't find {}".format(str_dir_c)
-        if not os.path.exists(str_dir_d):
-            print "Can't find {}".format(str_dir_d)
-        if not os.path.exists(str_dir_e):
-            print "Can't find {}".format(str_dir_e)
-        if not os.path.exists(str_dir_l):
-            print "Can't find {}".format(str_dir_l)
         sys.exit(999)
     print_and_log(" + Master dir found: {}".format(str_master_dir), "info")
 
