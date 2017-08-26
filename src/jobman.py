@@ -33,7 +33,7 @@ History
   ver 1.0.8 - Kill YAML, and comment out 'pilot' that uses YAML
   ver 1.0.9 - Fixing some errors in major loop, now cleans up and shuts down nicely - again
                   and cleaning out yaml, moving everything to .config file
-  ver 1.0.10  Fixing, and consolidating, the mailn loop. With Jasper and Jonas
+  ver 1.0.10  Fixing, and consolidating, the main loop. With Jasper and Jonas
 
 ToDo
     * introduce que-prioritising (high, normal, low priority jobs? or numbers?)
@@ -41,6 +41,7 @@ ToDo
     * Send .jmlog to L rather than t C/D
     * make 'hammer time' floating, to better ensure 100% cpu use
     * make statistics, to guide floting (auto) 'hammer time'
+    * put more of main() into seperate functions, to make main() smaller and cleaner
     * have jobman react to keypress, e.g. - Seems to be difficult in Python
         h  = Help "display list of keypress options, and continue"
         v  = Version "type JobMan version, and continue"
