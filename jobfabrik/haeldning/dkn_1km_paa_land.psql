@@ -1,8 +1,0 @@
-/*
-
-cd \Martin\Work_GitHub\jobman\jobfabrik\haeldning
-psql --host=c1400067 --dbname=pgv --username=mahvi
-\connect pgv
-\copy (SELECT kn1kmdk FROM temp_mahvi.km1_paa_land) TO 'dkn1km_paa_land_lables.scsv' WITH CSV HEADER DELIMITER ';'
-
-*/
