@@ -1,3 +1,6 @@
+
+" Don't use yaml, before it become part of default lib
+
 import yaml
 
 with open("../src/jobman_pilot.yaml", 'r') as fil:
