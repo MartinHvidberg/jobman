@@ -36,6 +36,7 @@ History
   ver 1.0.10  Fixing, and consolidating, the main loop. With Jasper and Jonas
 
 ToDo
+    * Fill ALL vacant slots at each hammertime
     * introduce que-prioritising (high, normal, low priority jobs? or numbers?)
     * make more specific error handeling in try: except: situations
     * Send .jmlog to L rather than t C/D
