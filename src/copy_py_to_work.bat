@@ -1,2 +1,0 @@
-xcopy jobman.bat F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_udsi_client_template\jobman.bat /V /Y
-xcopy jobman.py F:\PGV\Projektarbejdsmapper\P4\Software\JobMan\jobman_udsi_client_template\jobman.py /V /Y
