@@ -34,8 +34,11 @@ History
   ver 1.0.9 - Fixing some errors in major loop, now cleans up and shuts down nicely - again
                   and cleaning out yaml, moving everything to .config file
   ver 1.0.10  Fixing, and consolidating, the main loop. With Jasper and Jonas
+  ver 1.1.0   Occupying all CPU's on each cycle, not just starting one new process. Better with fast jobs...  
+  ver 1.1.1   Preparing deploy on Linux RHE 7  
 
 ToDo
+    * Fill ALL vacant slots at each hammertime
     * introduce que-prioritising (high, normal, low priority jobs? or numbers?)
     * make more specific error handeling in try: except: situations
     * Send .jmlog to L rather than t C/D
@@ -53,8 +56,8 @@ ToDo
         (') meanwhile substituted by the jobman_pilot.yaml
 """
 
-__version__ = "1.0.10"
-__build__ = "2017-08-25 1147 - jjm"
+__version__ = "1.1.1"
+__build__ = "2017-11-25 1147 - RHE"
 
 
 def print_and_log(str_message, level='Info'):
@@ -178,7 +181,7 @@ def start_new_process(dic_p):
     lst_a = list()
     for fil_a in os.listdir(str_dir_a):  # Global path to /Available directory
         lst_a.append(fil_a)
-    if len(lst_a) > 0:  # We have a job to do...
+    if len(lst_a) > 0:  # There are jobs in que
         bol_lif_more_left = True
         str_job = random.choice(lst_a)  # random pick amongst available jobs, to minimize risk of collision
         print_and_log("I picked job: {}".format(str_job))
