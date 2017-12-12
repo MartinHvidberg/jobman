@@ -35,7 +35,7 @@ History
                   and cleaning out yaml, moving everything to .config file
   ver 1.0.10  Fixing, and consolidating, the main loop. With Jasper and Jonas
   ver 1.1.0   Occupying all CPU's on each cycle, not just starting one new process. Better with fast jobs...  
-  ver 1.1.1   Preparing deploy on Linux RHE 7  
+  ver 1.1.1   Preparing deploy on Linux RHE 7.4  
 
 ToDo
     * Fill ALL vacant slots at each hammertime
@@ -57,7 +57,7 @@ ToDo
 """
 
 __version__ = "1.1.1"
-__build__ = "2017-11-25 1147 - RHE"
+__build__ = "2017-12-12 EOD - RHE"
 
 
 def print_and_log(str_message, level='Info'):
