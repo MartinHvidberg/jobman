@@ -7,6 +7,7 @@ import random
 import datetime
 import time
 import subprocess
+import stat # used with os.chmod
 
 # import from 3'rd party
 # import home grown...
@@ -35,7 +36,8 @@ History
                   and cleaning out yaml, moving everything to .config file
   ver 1.0.10  Fixing, and consolidating, the main loop. With Jasper and Jonas
   ver 1.1.0   Occupying all CPU's on each cycle, not just starting one new process. Better with fast jobs...  
-  ver 1.1.1   Preparing deploy on Linux RHE 7.4  
+  ver 1.1.1   Preparing deploy on Linux RHEL 7.4  
+  ver 1.1.2   Testing SpndTime on Linux RHEL 7.4 - fixing error with preserving execution rights after file move
 
 ToDo
     * Fill ALL vacant slots at each hammertime
@@ -56,13 +58,15 @@ ToDo
         (') meanwhile substituted by the jobman_pilot.yaml
 """
 
-__version__ = "1.1.1"
-__build__ = "2017-12-12 EOD - RHE"
+__version__ = "1.1.2"
+__build__ = "2017-12-13 - RHEL"
 
 
 def print_and_log(str_message, level='Info'):
     """ Write the same message to screen and to the logfile """
     print "<J> {}".format(str_message)
+    if level.lower() == 'error':
+        logging.error(str_message)
     if level.lower() == 'info':
         logging.info(str_message)
     elif level.lower() == 'warning':
@@ -72,6 +76,61 @@ def print_and_log(str_message, level='Info'):
     else:
         print "<J> Error - print_and_log() encountered unknown error level: {}".format(level)
 
+def ec_file_copy(src, dst, str_os):
+    if str_os == "win":
+        str_cmd = 'copy {} {}'.format(src, dst)
+    elif str_os == "nix":
+        str_cmd = 'cp {} {}'.format(src, dst)
+    else:
+        print "Can't understand OS = {}".format(str_os)
+        return False
+    ##print "Doing: os.system({})".format(str_cmd)
+    os.system(str_cmd)
+    
+def ec_file_move(src, dst, str_os):
+    if str_os == "win":
+        str_cmd = 'move {} {}'.format(src, dst)
+    elif str_os == "nix":
+        str_cmd = 'mv {} {}'.format(src, dst)
+    else:
+        print "Can't understand OS = {}".format(str_os)
+        return False
+    ##print "Doing: os.system({})".format(str_cmd)
+    os.system(str_cmd)
+    
+def move(src, dst):
+    """Recursively move a file or directory to another location. This is
+    similar to the Unix "mv" command.
+
+    If the destination is a directory or a symlink to a directory, the source
+    is moved inside the directory. The destination path must not already
+    exist.
+
+    If the destination already exists but is not a directory, it may be
+    overwritten depending on os.rename() semantics.
+
+    If the destination is on our current filesystem, then rename() is used.
+    Otherwise, src is copied to the destination and then removed.
+    A lot more could be done here...  A look at a mv.c shows a lot of
+    the issues this implementation glosses over.
+
+    """
+    real_dst = dst
+    if os.path.isdir(dst):
+        real_dst = os.path.join(dst, _basename(src))
+        if os.path.exists(real_dst):
+            raise Error, "Destination path '%s' already exists" % real_dst
+    try:
+        os.rename(src, real_dst)
+    except OSError:
+        if os.path.isdir(src):
+            if destinsrc(src, dst):
+                raise Error, "Cannot move a directory '%s' into itself '%s'." % (src, dst)
+            copytree(src, real_dst, symlinks=True)
+            rmtree(src)
+        else:
+            copy2(src, real_dst)
+            os.unlink(src)
 
 def read_config_file(str_fn):
     """ Read the specified config file, and make a dictionary version of it """
@@ -133,7 +192,7 @@ def handle_completed_processes(dic_p):
             try:
                 fil_jmlog = open(dic_proc_i['workdir'] + str_osep + dic_proc_i['name'] + ".jmlog", "w")
             except IOError as e:
-                print_and_log("Error : Seems imposible to write log file. python says: {}".format(e))
+                print_and_log("Error : Seems impossible to write log file. python says: {}".format(e))
                 sys.exit(995)
             for itms in sorted(dic_proc_i.keys()):
                 str_logline = "   $ {} : {}".format(itms, dic_proc_i[itms])
@@ -141,14 +200,16 @@ def handle_completed_processes(dic_p):
                 print_and_log(str_logline)
             fil_jmlog.close()
             # return all the files from /Workdir to /Master and clean up
+            ec_file_move(dic_proc_i['workdir'], str_dest_dir, str_os)
             try:
-                shutil.move(dic_proc_i['workdir'], str_dest_dir)
+                ##print "Try to move {} -> {}".format(dic_proc_i['workdir'], str_dest_dir)
+                pass #ec_file_move(dic_proc_i['workdir'], str_dest_dir, str_os)
             except:
                 print_and_log("Error - Can't move workdir back to master", "error")
                 sys.exit(994)
             # Remove the job from /Busy
             try:
-                shutil.move(str_dir_b + str_osep + dic_proc_i['name'] + ".bat", str_dest_dir)
+                ec_file_move(str_dir_b + str_osep + dic_proc_i['name'] + ".*", str_dest_dir, str_os)
             except:
                 print_and_log("Error - Can't move Busy to Complete/Discarded: {} >> {}".format(
                     str_dir_b + str_osep + dic_proc_i['name'], str_dest_dir), "error")
@@ -187,9 +248,11 @@ def start_new_process(dic_p):
         print_and_log("I picked job: {}".format(str_job))
         # Secure the file, so nobody else grabs it
         try:
-            shutil.move(str_dir_a + str_osep + str_job, str_dir_b + str_osep + str_job)
+            # shutil.move(str_dir_a + str_osep + str_job, str_dir_b + str_osep + str_job) <-- Not preserving unix rights, like 'executable'
+            # maybe a good solution for Unix --> ec_file_move(str_dir_a + str_osep + str_job, str_dir_b + str_osep + str_job)
+            os.rename(str_dir_a + str_osep + str_job, str_dir_b + str_osep + str_job)  # move the file
         except:
-            print_and_log("... but I wasn't fast enough.")
+            print_and_log("... but I couldn't move it to /Busy.")
             str_job = None  # If unsuccessful the file may have been snatch by another worker, milli-seconds before us.
             return bol_lif_more_left, dic_p  # bail out here, and wait to be called again, by the outer loop
         # make and fill work-dir in work-dir
@@ -198,11 +261,12 @@ def start_new_process(dic_p):
         str_workwork_dir = str_work_dir + str_osep + str_shortname
         os.makedirs(str_workwork_dir)
         try:
-            shutil.copyfile(str_dir_b + str_osep + str_job, str_workwork_dir + str_osep + str_job)
+            # shutil.copyfile(str_dir_b + str_osep + str_job, str_workwork_dir + str_osep + str_job) <-- dosn't work on RHEL74
+            ec_file_copy(str_dir_b + str_osep + str_job, str_workwork_dir + str_osep + str_job, str_os)
+            #os.chmod(str_workwork_dir + str_osep + str_job, str_os, stat.S_IXUSR)  # Make the local copy executable
         except:
             print_and_log(
-                "Error - Can't copy job file: {} Busy: {} Workdir: {}".format(str_job, str_dir_d, str_workwork_dir),
-                "error")
+                "Error - Can't copy job file: {} Busy: {} Workdir: {}".format(str_job, str_dir_b, str_workwork_dir), "error")
             sys.exit(996)
         # Run...
         if str_job:  # XXX this is not super smooth, look for a more logically clean solution
@@ -236,15 +300,18 @@ if __name__ == "__main__":
 
     # Check if we are on windows or Linux
     if os.name.lower() in ('unix', 'posix'):
+        str_os = "nix"
         str_osep = "/"
         # str_pyth = "python"
         # str_oext = ".sh"
     elif os.name.lower() in ('win', 'nt'):
+        str_os = "win"
         str_osep = "\\"
         # str_pyth = "C:\Python27\python.exe"
         # str_oext = ".bat"
     else:
-        print_and_log("Can't understand OS named: {}".format(os.name), "info")
+        print_and_log("Can't understand OS name: {}".format(os.name), "info")
+        str_os = ""
         str_osep = ""
         exit(993)
 
@@ -344,9 +411,9 @@ if __name__ == "__main__":
     bol_jobs_in_process = False  # We haven't started any processes, yet.
     dic_pro = dict()  # Dictionary holding the process-objects
 
-    while ((bol_more_in_que and bol_pilot_say_go) or bol_jobs_in_process):  # loop if more left or more busy
+    while ((bol_more_in_que and bol_pilot_say_go) or bol_jobs_in_process):  # loop if more in que or more busy
 
-        print_and_log("Running: {} / {}. Wait {}. [qu {}, pi {}, pr {}]".format(len(dic_pro), num_max_pr, num_htime,
+        print_and_log("Running: {} / {}. Wait {}. [more in que: {}, pilot go: {}, processing: {}]".format(len(dic_pro), num_max_pr, num_htime,
                                                                                 bol_more_in_que, bol_pilot_say_go,
                                                                                 bol_jobs_in_process))
 
@@ -354,7 +421,7 @@ if __name__ == "__main__":
         dic_pro = handle_completed_processes(dic_pro)
         if len(dic_pro) >= num_max_pr:  # if all slots are occupied, wait a second
             print_and_log(
-                "All processes running: {} of {}. JobMan sleeping for {} seconds".format(len(dic_pro), num_max_pr,
+                "All processes running: {} of {}. JobMan sleeping for {} seconds Zzzzzzzzzzzzz".format(len(dic_pro), num_max_pr,
                                                                                          num_htime))
             time.sleep(num_htime)  # in seconds...
 
@@ -382,10 +449,10 @@ if __name__ == "__main__":
 
         # update Jobs_in_process
         bol_jobs_in_process = len(dic_pro) > 0
-        print_and_log("whilelo: {} / {}. Wait {}. [qu {}, pi {}, pr {}]".format(len(dic_pro), num_max_pr, num_htime,
+        print_and_log("whilelo: {} / {}. Wait {}. [more in que: {}, pilot go: {}, processing: {}]".format(len(dic_pro), num_max_pr, num_htime,
                                                                                 bol_more_in_que, bol_pilot_say_go,
                                                                                 bol_jobs_in_process))
-    print_and_log("\nJobMan complete...", "info")
+    print_and_log("\nJobMan complete... at time {}".format(datetime.datetime.now()), "info")
 
 print "\nScript completed... {} ver.{} build.{}".format(os.path.basename(__file__), __version__, __build__)
 
