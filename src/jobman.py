@@ -95,7 +95,7 @@ def ec_file_move(src, dst, str_os):
     else:
         print "Can't understand OS = {}".format(str_os)
         return False
-    ##print "Doing: os.system({})".format(str_cmd)
+    print "Doing: os.system({})".format(str_cmd)
     os.system(str_cmd)
     
 def move(src, dst):
