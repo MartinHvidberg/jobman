@@ -38,6 +38,7 @@ History
   ver 1.1.0   Occupying all CPU's on each cycle, not just starting one new process. Better with fast jobs...  
   ver 1.1.1   Preparing deploy on Linux RHEL 7.4  
   ver 1.1.2   Testing SpndTime on Linux RHEL 7.4 - fixing error with preserving execution rights after file move
+  ver 1.1.3   Minor changes, Sucesfully running 2018a, 2018-01-08/mahv
 
 ToDo
     * Fill ALL vacant slots at each hammertime
@@ -58,8 +59,8 @@ ToDo
         (') meanwhile substituted by the jobman_pilot.yaml
 """
 
-__version__ = "1.1.2"
-__build__ = "2017-12-13 - RHEL"
+__version__ = "1.1.3"
+__build__ = "2018-01-08 - RHEL"
 
 
 def print_and_log(str_message, level='Info'):
