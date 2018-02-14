@@ -41,22 +41,24 @@ History
   ver 1.1.3   Minor changes, Sucesfully running 2018a, 2018-01-08/mahv
 
 ToDo
-    * Fill ALL vacant slots at each hammertime
+    * Option to keep checking que, after 'empty que', to allow 'reload' on-the-fly
+    * Option to put que on FTP server
+    * Fill ALL vacant slots at each hammertime - fixed?
     * introduce que-prioritising (high, normal, low priority jobs? or numbers?)
-    * make more specific error handeling in try: except: situations
     * Send .jmlog to L rather than t C/D
-    * make 'hammer time' floating, to better ensure 100% cpu use
-    * make statistics, to guide floting (auto) 'hammer time'
+    * make 'hammer time' auto-ajusting, to better ensure 100% cpu use
+    * make statistics, to guide auto 'hammer time'
     * put more of main() into seperate functions, to make main() smaller and cleaner
+    * make more specific error handling in try: except: situations
     * have jobman react to keypress, e.g. - Seems to be difficult in Python
         h  = Help "display list of keypress options, and continue"
         v  = Version "type JobMan version, and continue"
         s  = Status "type some status info, and continue"
-        c' = Config "Re-read the config file"
+        c  = Config "Re-read the config file"
         +  = increase "+1 on number of processes"
         -  = decrease "-1 on number of processes"
         q' = Quit "don't take new jobs, and stop when done"
-        (') meanwhile substituted by the jobman_pilot.yaml
+        (') meanwhile substituted by the jobman_pilot.config
 """
 
 __version__ = "1.1.3"
