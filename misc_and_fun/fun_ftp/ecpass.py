@@ -1,3 +1,25 @@
+"""
+Expect input like:
+# FTP sites
+
+conn: 1: ftp.somewhere.net
+1: host: ftp.some.net
+1: port:
+1: prot: Explicit FTP over TLS if available
+1: user: auser
+1: pass: 98765
+1: ddir: /public_html/auser/
+
+conn: 2: ftp.work.dk
+2: host: ftp.work.dk
+2: port: 21
+2: prot: Explicit FTP over TLS if available
+2: user: emp678
+2: pass: qwerty
+2: ddir: /678/temp/
+
+"""
+
 
 def ecp(str_fn):
     num_l = 0
