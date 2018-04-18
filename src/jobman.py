@@ -43,6 +43,7 @@ History
 ToDo
     * Option to keep checking que, after 'empty que', to allow 'reload' on-the-fly
     * Option to put que on FTP server
+    * Consider Redis or other NoSQL solution
     * Fill ALL vacant slots at each hammertime - fixed?
     * introduce que-prioritising (high, normal, low priority jobs? or numbers?)
     * Send .jmlog to L rather than t C/D
