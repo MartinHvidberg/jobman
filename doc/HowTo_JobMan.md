@@ -2,6 +2,11 @@
 
 # How to - JobMan
 
+These instructions refer to **JobMan version 1.x**
+
+Specifically it's tested against
+- __version__ = "1.1.3"
+- __build__ = "2018-01-08 - RHEL"
 
 ## What JobMan is - and isn't
 
@@ -43,12 +48,42 @@ You will not do this manually, you will write a small script to do it, or otherw
 Now you could write a script, simply listing calls to all the other scripts, and run it. Then the web pages would be processed (one at the time) and the job would be done. But lets assume the analysis of each image takes a couple of seconds, with just 10 images per page, that would take a total of 100.000 x 10 x 2 = 2 millions seconds, which is more than 3 weeks ... Too slow.
 
 #### All in parallel approach
-Maybee you can write a script file that starts all the jobs, i.e. starting the next job right away, not waiting for the prior jobs to finish first. On Unix that can be done with a simple & at the end of each line. This will cause your computer to start processing all 100.000 web sites in parallel. If you have 100.000 CPUs this might be a good idea, but more likely you haven't and then this approach will be hugely inefficient.
+Maybee you can write a script file that starts all the jobs, i.e. starting the next job right away, not waiting for the prior jobs to finish. On Unix that can be done with a simple & at the end of each line. This will cause your computer to start processing all 100.000 web pages in parallel. If you have 100.000 CPUs this might be a good idea, but more likely you haven't and then this approach will be hugely inefficient.
 
 #### GNU Parallel, Xargs, subshells, etc.
 
-There exist, in particular on Unix/Linux, a number of way to execute jobs in parallel. And at least some of them would be able to do a really good job here. But remember, we have 3 computers available, all optimized to perform this task. Having several computers collaborating is not trivial, if at all possible with the classic parallel frameworks.
+There exist, in particular on Unix/Linux, a number of way to execute jobs in parallel. And at least some of them would be able to do a really good job here. But remember, we have 3 computers available, all optimized to perform this task. Having several computers collaborating is not trivial, if at all possible, with the classic parallel frameworks.
 
 #### The JobMan approach
 
-JobMan assumes that all the jobs (the 100.000 files in our case) is located in a directory on a shared network - called 'the pool'. Each computer use a local working directory, and must have read+write access to both the local directory and the pool. The pool is subdivided into separate zones for Non-processed jobs, processed jobs and failed jobs. JobMan will pick jobs out of the pool, process them locally, and return them to the pool. You can start JobMan on as many computers you want. A local jobman.config file dictates how many jobs to run in parallel, so this can be adjusted individually for each computer.
+JobMan assumes that all the jobs (the 100.000 files in our case) is located in a directory on a shared network - called 'the Master'. Each computer use a local working directory, and must have read+write access to both the local directory and the Master. The Master is subdivided into separate zones for new-jobs, processed-jobs and failed-jobs. JobMan will pick jobs out of the Master, process them locally, and return them to the Master. You can start JobMan on as many computers you want. A local jobman.config file dictates how many jobs to run in parallel, so this can be adjusted individually for each computer.
+
+
+## How to run Jobman
+
+You need a few things to get started
+* A number of job-files
+* A directory to hold the job-files. This place is referred to as 'Master'
+* Another directory, as local work-directory, referred to as 'Worker'
+
+For a description of job-files, see the chapter: Example, above.
+
+The two directories may be on the same or separate computers. I case you use several computers for processing, each computer must have a private work-dir, and all computers must be able to access the shared Master.
+
+### 1. Create the Master
+
+Though not absolutely necessary, it's by far the easiest to create the Master first.
+
+Master is a directory (in version 1.x of JobMan) with a number of mandatory sub-directories:
+
+* Available/
+* Busy/
+* Completed/
+* Discarded/
+* Executables/
+
+
+### 2. Create the Worker
+
+
+### 3. Run
