@@ -334,11 +334,9 @@ if __name__ == "__main__":
         str_worker_comp = dic_conf['computer']
         if str_worker_comp == 'GE400':
             print_and_log(
-                "I'm sorry {}, I'm afraid I can't do that. I'm not a General Electric 400-series computer.".format(
-                    dic_conf['name']), "error")
+                "I'm sorry {}, I'm afraid I can't do that. I'm not a General Electric 400-series computer.".format(dic_conf['name']), "error")
             print_and_log(
-                "Please check if you have edited your local copy of jobman.config to reflect your actual computer.",
-                "error")
+                "Please check if you have edited your local copy of jobman.config to reflect your actual computer.", "error")
             sys.exit(994)
     else:
         print_and_log("Error - .config file don't specify a computer", "error")
