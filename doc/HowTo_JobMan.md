@@ -62,9 +62,11 @@ JobMan assumes that all the jobs (the 100.000 files in our case) is located in a
 ## How to run Jobman
 
 You need a few things to get started
-* A number of job-files
-* A directory to hold the job-files. This place is referred to as 'Master'
-* Another directory, as local work-directory, referred to as 'Worker'
+* A number of *job-files*
+* A *directory* to hold the job-files. This place is referred to as 'Master'
+* Another *local work-directory*, referred to as 'Worker'
+* The contents of the [JobMan](https://github.com/MartinHvidberg/jobman.git) repository (strictly, you only need the */src/jobman.py* file)
+* *Python* 2.x (testet on 2.7.5 on RedHat and 2.7.? on win)
 
 For a description of job-files, see the chapter: Example, above.
 
@@ -74,16 +76,58 @@ The two directories may be on the same or separate computers. I case you use sev
 
 Though not absolutely necessary, it's by far the easiest to create the Master first.
 
-Master is a directory (in version 1.x of JobMan) with a number of mandatory sub-directories:
+Master is (in version 1.x of JobMan) a directory with a number of mandatory sub-directories, and a few files:
 
 * Available/
 * Busy/
 * Completed/
 * Discarded/
 * Executables/
+* jobman.sh (.bat on windows)
+* jobman.config
+* (jobman.py)
 
+
+#### Available
+Is the queue. This is where you put the jobs you want JobMan to manage.
+
+#### Busy
+While a job is in process on a Worker computer, the Master copy of the job file resides in this directory.
+
+#### Completed
+When JobMan successfully finishes with a job, it will return the job-file and the local working directory here. Therefore Completed gets two new object (a file and a sub-directory) for each successfully completed job.
+
+#### Discarded
+Same as Completed, except this is where the job goes if it didn't complete successfully.
+
+#### Executables
+No job files go her. This is where the 'helper' programs are stored. If the job-file is a completely self-contained program, this directory will be empty. But if a helper program or any other shared resource is needed for the execution of a job, the master copy is located here.
+
+#### jobman.sh (.bat on windows)
+This file starts a JobMan session, i.e. this is the file you want to run to run JobMan. The insides are described below, in the chapter about the Worker.
+
+#### jobman.config
+A master copy of the configuration file. This file **always** need to be edited to match the individual worker, before you run JobMan. The insides are described below, in the chapter about the Worker.
+
+#### jobman.py
+Normally the JobMan program file will live here, but jobman.sh (.bat) have an option to get it elsewhere.
 
 ### 2. Create the Worker
 
+#### The short version
+* Make a local directory
+* Copy jobman.sh (.bat) and jobman.config from master
+* Edit jobman.sh (.bat) and jobman.config to fit your computer
+
+#### The slightly longer version
+Make a local directory. Make sure that the user supposed to run JobMan have full reading and writing access to this directory.
+
+Copy jobman.sh (.bat) and jobman.config from Master to your new local working directory.
+
+Edit jobman.sh (.bat) and jobman.config to fit your computer.
+
+   * jobman.sh (.bat): You will need to correct the location of /Master/Executables/ as well as the path to your local copy of the Python interpreter. If jobman.py is not present, you need to to adjust the optional copying of it from a relevant location. It can be copied from /Master/ or from a git repository of your choice.
+   * jobman.config: Contains a number of parameters, that identifies and control the running of JobMan on the specific computer. This inclused the name og the computer, the desired number of parallel processes and the location of the Master and Worker directories. There are comments inside the file to guide you towards meaningful values.
 
 ### 3. Run
+Run jobman.sh. This will automatically create the two sub-directories you need: workers/ and Executables/ and populate Executables/ with a copy of whats in the Master/Executable. From here JobMan will manage everything for you. If you need to inter-ween you can do so via the jobman.config file. This will allow you to adjust the number of running processes, or pause the queue. When the processing is completed you will se the message: **JobMan complete...**
