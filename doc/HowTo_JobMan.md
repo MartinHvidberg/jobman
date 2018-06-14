@@ -88,19 +88,19 @@ Master is (in version 1.x of JobMan) a directory with a number of mandatory sub-
 * (jobman.py)
 
 
-#### Available
+#### Available/
 Is the queue. This is where you put the jobs you want JobMan to manage.
 
-#### Busy
+#### Busy/
 While a job is in process on a Worker computer, the Master copy of the job file resides in this directory.
 
-#### Completed
+#### Completed/
 When JobMan successfully finishes with a job, it will return the job-file and the local working directory here. Therefore Completed gets two new object (a file and a sub-directory) for each successfully completed job.
 
-#### Discarded
+#### Discarded/
 Same as Completed, except this is where the job goes if it didn't complete successfully.
 
-#### Executables
+#### Executables/
 No job files go her. This is where the 'helper' programs are stored. If the job-file is a completely self-contained program, this directory will be empty. But if a helper program or any other shared resource is needed for the execution of a job, the master copy is located here.
 
 #### jobman.sh (.bat on windows)
