@@ -39,6 +39,7 @@ History
   ver 1.1.1   Preparing deploy on Linux RHEL 7.4  
   ver 1.1.2   Testing SpndTime on Linux RHEL 7.4 - fixing error with preserving execution rights after file move
   ver 1.1.3   Minor changes, Sucesfully running 2018a, 2018-01-08/mahv
+  #  Backup for Fedora 30 2019-06-23
 
 ToDo
     * Option to keep checking que, after 'empty que', to allow 'reload' on-the-fly
